@@ -13,6 +13,8 @@ import lombok.Setter;
 public class OrderDetailDto extends UserDateAuditingDto {
     private Integer id;
     private String orderId;
+    private Integer orderStatusId;
+    private String orderStatusName;
     private ProductOptionDto productOptionDto;
     private Integer quantity;
     private Long price;

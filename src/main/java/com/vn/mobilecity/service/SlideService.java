@@ -1,21 +1,21 @@
 package com.vn.mobilecity.service;
 
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
 import com.vn.mobilecity.domain.dto.request.SlideRequestDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.SlideDto;
 
+import java.util.List;
+
 public interface SlideService {
     SlideDto getById(Integer id);
 
-    PaginationResponseDto<SlideDto> getAll(PaginationFullRequestDto paginationFullRequestDto);
+    List<SlideDto> getAll(Boolean status);
 
-    PaginationResponseDto<SlideDto> getByStatus(PaginationFullRequestDto paginationFullRequestDto, Boolean status);
+    List<SlideDto> getSlideByUser();
 
     SlideDto create(SlideRequestDto createDto);
 
-    SlideDto update(Integer id, SlideRequestDto updateDto);
+    SlideDto updateById(Integer id, SlideRequestDto updateDto);
 
     CommonResponseDto deleteById(Integer id);
 }

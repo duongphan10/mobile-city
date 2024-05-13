@@ -1,17 +1,19 @@
 package com.vn.mobilecity.service;
 
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
 import com.vn.mobilecity.domain.dto.request.ReviewCreateDto;
 import com.vn.mobilecity.domain.dto.request.ReviewUpdateDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.ReviewDto;
 
+import java.util.List;
+
 public interface ReviewService {
 
     ReviewDto getById(Integer id);
 
-    PaginationResponseDto<ReviewDto> search(Integer productId, Integer star, PaginationFullRequestDto paginationFullRequestDto);
+    List<ReviewDto> search(Integer productId, Integer star);
+
+    double countStar(Integer productId);
 
     ReviewDto create(Integer userId, ReviewCreateDto reviewCreateDto);
 

@@ -14,13 +14,14 @@ import java.util.Arrays;
 
 /**
  * Aspect for logging execution of service and repository Spring components.
- *
+ * <p>
  * By default, it only runs with the "dev" profile.
  */
 @Aspect
 public class LoggingAspect {
     private final String POD_ID;
     static final String LOGGING_FORMAT = "type={}; ip={}; method={}.{}(); args={}; execTime={} ms; response={}";
+
     public LoggingAspect() {
         POD_ID = System.getenv("POD_ID");
     }
@@ -52,7 +53,7 @@ public class LoggingAspect {
     /**
      * Pointcut that matches all Spring beans in the application's main packages.
      */
-    @Pointcut("within(com.vn.mobilecity.controller..*)"+
+    @Pointcut("within(com.vn.mobilecity.controller..*)" +
             " || within(com.vn.mobilecity.service..*)")
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
@@ -72,7 +73,7 @@ public class LoggingAspect {
      * Advice that logs methods throwing exceptions.
      *
      * @param joinPoint join point for advice.
-     * @param e exception.
+     * @param e         exception.
      */
     @AfterThrowing(pointcut = "applicationPackagePointcut()" +
             " && controllerPointcut() " +
@@ -91,6 +92,7 @@ public class LoggingAspect {
     /**
      * Advice that logs when a method is entered and exited.
      * https://stackoverflow.com/questions/38822971/spring-aop-exclude-some-classes
+     *
      * @param joinPoint join point for advice.
      * @return result.
      * @throws Throwable throws {@link IllegalArgumentException}.
@@ -126,6 +128,7 @@ public class LoggingAspect {
     /**
      * Advice that logs when a method is entered and exited.
      * https://stackoverflow.com/questions/38822971/spring-aop-exclude-some-classes
+     *
      * @param joinPoint join point for advice.
      * @return result.
      * @throws Throwable throws {@link IllegalArgumentException}.

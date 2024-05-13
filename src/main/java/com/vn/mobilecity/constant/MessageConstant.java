@@ -20,10 +20,9 @@ public class MessageConstant {
     public static final String DELETE_PRODUCT_OPTION_SUCCESSFULLY = "You successfully deleted the product option";
     public static final String DELETE_CART_ITEM_SUCCESSFULLY = "You successfully deleted the item of cart";
     public static final String DELETE_SLIDE_SUCCESSFULLY = "You successfully deleted the slide";
-    public static final String DELETE_DISCOUNT_CODE_SUCCESSFULLY = "You successfully deleted the slide";
-    public static final String DELETE_USER_DISCOUNT_SUCCESSFULLY = "You successfully deleted the user discount";
     public static final String DELETE_ORDER_SUCCESSFULLY = "You successfully deleted the order";
     public static final String DELETE_REVIEW_SUCCESSFULLY = "You successfully deleted the review";
+    public static final String DELETE_NOTIFICATION_SUCCESSFULLY = "You successfully deleted the notification";
     public static final String DELETE_USER_ROOM_SUCCESSFULLY = "You successfully deleted the user room";
     public static final String DELETE_ROOM_SUCCESSFULLY = "You successfully deleted the room";
     public static final String DELETE_MESSAGE_SUCCESSFULLY = "You successfully deleted the message";

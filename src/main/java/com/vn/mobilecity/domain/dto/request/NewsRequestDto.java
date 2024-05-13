@@ -18,7 +18,7 @@ public class NewsRequestDto {
 
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     private String title;
-
+    //@NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private MultipartFile avatar;
 
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)

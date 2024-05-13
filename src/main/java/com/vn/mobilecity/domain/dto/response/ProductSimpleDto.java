@@ -24,5 +24,9 @@ public class ProductSimpleDto extends UserDateAuditingDto {
     private Integer categoryId;
     private String categoryName;
 
+    private Integer promotionId;
+    private String promotionName;
+    private Long promotionValue;
+
     private List<ProductOptionDto> productOptionDtos;
 }

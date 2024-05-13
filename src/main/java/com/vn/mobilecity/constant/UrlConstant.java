@@ -7,7 +7,7 @@ public class UrlConstant {
         public static final String LOGIN = PRE_FIX + "/login";
         public static final String LOGOUT = PRE_FIX + "/logout";
         public static final String SEND_VERIFY = PRE_FIX + "/send";
-        public static final String VERIFY = PRE_FIX + "/verify";       
+        public static final String VERIFY = PRE_FIX + "/verify";
     }
 
     public static class User {
@@ -79,19 +79,21 @@ public class UrlConstant {
         public static final String CREATE = PRE_FIX;
         public static final String UPDATE = PRE_FIX + "/{id}";
         public static final String DELETE = PRE_FIX + "/{id}";
+    }
 
-        // OPTION
-        public static final String GET_OPTION_BY_ID = PRE_FIX + "/option/{id}";
-        public static final String GET_ALL_OPTION = PRE_FIX + "/option/all/{productId}";
-        public static final String CREATE_OPTION = PRE_FIX + "/option";
-        public static final String UPDATE_OPTION = PRE_FIX + "/option/{id}";
-        public static final String DELETE_OPTION = PRE_FIX + "/option/{id}";
+    public static class ProductOption {
+        private static final String PRE_FIX = "/product-option";
+        public static final String GET_OPTION_BY_ID = PRE_FIX + "/{id}";
+        public static final String GET_ALL_OPTION = PRE_FIX + "/all";
+        public static final String CREATE_OPTION = PRE_FIX;
+        public static final String UPDATE_OPTION = PRE_FIX + "/{id}";
+        public static final String DELETE_OPTION = PRE_FIX + "/{id}";
     }
 
     public static class Cart {
         private static final String PRE_FIX = "/cart";
         public static final String GET_ALL = PRE_FIX + "/all";
-        public static final String GET_NUMBER_OF_ITEM = PRE_FIX + "/items";
+        public static final String COUNT_ITEM = PRE_FIX + "/items";
         public static final String CREATE = PRE_FIX;
         public static final String UPDATE = PRE_FIX + "/{id}";
         public static final String DELETE = PRE_FIX + "/{id}";
@@ -100,18 +102,30 @@ public class UrlConstant {
     public static class Slide {
         private static final String PRE_FIX = "/slide";
         public static final String GET_BY_ID = PRE_FIX + "/{id}";
-        public static final String GET_BY_STATUS = PRE_FIX + "/status";
+        public static final String GET_BY_USER = PRE_FIX;
         public static final String GET_ALL = PRE_FIX + "/all";
         public static final String CREATE = PRE_FIX;
         public static final String UPDATE = PRE_FIX + "/{id}";
         public static final String DELETE = PRE_FIX + "/{id}";
     }
 
+    public static class OrderStatus {
+        private static final String PRE_FIX = "/order-status";
+        public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String GET_ALL = PRE_FIX + "/all";
+    }
+
+    public static class PaymentType {
+        private static final String PRE_FIX = "/payment-type";
+        public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String GET_ALL = PRE_FIX + "/all";
+    }
+
     public static class Order {
         private static final String PRE_FIX = "/order";
         public static final String GET_BY_ID = PRE_FIX + "/{id}";
         public static final String GET_ALL = PRE_FIX + "/all";
-        public static final String GET_MY_ALL = PRE_FIX + "/all/my";
+        public static final String GET_ALL_BY_USER = PRE_FIX + "/my";
         public static final String CREATE = PRE_FIX;
 
         public static final String UPDATE = PRE_FIX + "/{id}";
@@ -121,17 +135,28 @@ public class UrlConstant {
     public static class OrderDetail {
         private static final String PRE_FIX = "/order-detail";
         public static final String GET_BY_ID = PRE_FIX + "/{id}";
-        public static final String GET_ALL = PRE_FIX + "/all/{orderId}";
+        public static final String GET_ALL = PRE_FIX + "/all";
     }
 
     public static class Review {
         private static final String PRE_FIX = "/review";
         public static final String GET_BY_ID = PRE_FIX + "/{id}";
         public static final String GET_ALL = PRE_FIX + "/all";
+        public static final String GET_STAR = PRE_FIX + "/star";
         public static final String CREATE = PRE_FIX;
 
         public static final String UPDATE = PRE_FIX + "/{id}";
         public static final String DELETE = PRE_FIX + "/{id}";
+    }
+
+    public static class Notification {
+        private static final String PRE_FIX = "/notification";
+        public static final String GET_BY_ID = PRE_FIX + "/{id}";
+        public static final String GET_ALL = PRE_FIX + "/all";
+        public static final String CREATE = PRE_FIX;
+
+        public static final String UPDATE_BY_ID = PRE_FIX + "/{id}";
+        public static final String DELETE_BY_ID = PRE_FIX + "/{id}";
     }
 
     public static class File {

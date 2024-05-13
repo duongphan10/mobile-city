@@ -21,8 +21,5 @@ public class ProductOptionDto extends UserDateAuditingDto {
     private Long price;
     private Integer quantity;
     private Boolean status;
-    private Integer promotionId;
-    private String promotionName;
-    private Long promotionValue;
 
 }

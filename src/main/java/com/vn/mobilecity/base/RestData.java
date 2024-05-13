@@ -17,11 +17,11 @@ public class RestData<T> {
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private T message;
 
-    @JsonInclude(JsonInclude.Include.ALWAYS)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public static RestData<?> success(Object data) {
-        return new RestData<>(RestStatus.SUCCESS, null, data);
+        return new RestData<>(RestStatus.SUCCESS, "Thành công", data);
     }
 
     public static RestData<?> success(Object message, Object data) {

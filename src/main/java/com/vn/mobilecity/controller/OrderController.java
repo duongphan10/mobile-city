@@ -3,7 +3,6 @@ package com.vn.mobilecity.controller;
 import com.vn.mobilecity.base.BaseResponse;
 import com.vn.mobilecity.base.RestApiV1;
 import com.vn.mobilecity.constant.UrlConstant;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
 import com.vn.mobilecity.domain.dto.request.OrderCreateDto;
 import com.vn.mobilecity.domain.dto.request.OrderUpdateDto;
 import com.vn.mobilecity.security.CurrentUser;
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +36,17 @@ public class OrderController {
     @Operation(summary = "API get all order")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(UrlConstant.Order.GET_ALL)
-    public ResponseEntity<?> getAllOrder(@Valid @ParameterObject PaginationFullRequestDto paginationFullRequestDto) {
-        return BaseResponse.success(orderService.getAll(paginationFullRequestDto));
+    public ResponseEntity<?> getAllOrder(@RequestParam(name = "status", required = false) Integer status,
+                                         @RequestParam(name = "type", required = false) Integer type) {
+        return BaseResponse.success(orderService.getAll(status, type));
     }
 
     @Tag(name = "order-controller")
     @Operation(summary = "API get all order")
-    @GetMapping(UrlConstant.Order.GET_MY_ALL)
-    public ResponseEntity<?> getMyOrder(@Valid @ParameterObject PaginationFullRequestDto paginationFullRequestDto,
-                                        @Parameter(name = "principal", hidden = true)
+    @GetMapping(UrlConstant.Order.GET_ALL_BY_USER)
+    public ResponseEntity<?> getMyOrder(@Parameter(name = "principal", hidden = true)
                                         @CurrentUser UserPrincipal user) {
-        return BaseResponse.success(orderService.getAllByUserId(user.getId(), paginationFullRequestDto));
+        return BaseResponse.success(orderService.getAllByUserId(user.getId()));
     }
 
     @Tag(name = "order-controller")
@@ -67,14 +65,6 @@ public class OrderController {
     public ResponseEntity<?> updateOrderById(@PathVariable Integer id,
                                              @Valid @RequestBody OrderUpdateDto orderUpdateDto) {
         return BaseResponse.success(orderService.updateById(id, orderUpdateDto));
-    }
-
-    @Tag(name = "order-controller")
-    @Operation(summary = "API delete order by id")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(UrlConstant.Order.DELETE)
-    public ResponseEntity<?> deleteOrderById(@PathVariable Integer id) {
-        return BaseResponse.success(orderService.deleteById(id));
     }
 
 }

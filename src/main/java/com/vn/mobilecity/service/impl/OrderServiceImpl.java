@@ -1,30 +1,25 @@
 package com.vn.mobilecity.service.impl;
 
-import com.vn.mobilecity.constant.*;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
-import com.vn.mobilecity.domain.dto.pagination.PagingMeta;
+import com.vn.mobilecity.config.NotificationConfig;
+import com.vn.mobilecity.constant.ErrorMessage;
+import com.vn.mobilecity.constant.OrderStatusConstant;
+import com.vn.mobilecity.constant.PaymentTypeConstant;
+import com.vn.mobilecity.constant.RoleConstant;
 import com.vn.mobilecity.domain.dto.request.OrderCreateDto;
 import com.vn.mobilecity.domain.dto.request.OrderProductRequestDto;
 import com.vn.mobilecity.domain.dto.request.OrderUpdateDto;
-import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.OrderDto;
 import com.vn.mobilecity.domain.entity.*;
 import com.vn.mobilecity.domain.mapper.OrderMapper;
 import com.vn.mobilecity.exception.ForbiddenException;
 import com.vn.mobilecity.exception.InvalidException;
 import com.vn.mobilecity.exception.NotFoundException;
-import com.vn.mobilecity.repository.AddressRepository;
-import com.vn.mobilecity.repository.OrderRepository;
-import com.vn.mobilecity.repository.OrderStatusRepository;
-import com.vn.mobilecity.repository.ProductOptionRepository;
+import com.vn.mobilecity.proactive.alert.AsyncService;
+import com.vn.mobilecity.repository.*;
 import com.vn.mobilecity.service.OrderDetailService;
 import com.vn.mobilecity.service.OrderService;
 import com.vn.mobilecity.service.UserService;
-import com.vn.mobilecity.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,49 +31,48 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final AddressRepository addressRepository;
     private final OrderStatusRepository orderStatusRepository;
+    private final PaymentTypeRepository paymentTypeRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final RoleRepository roleRepository;
     private final UserService userService;
     private final OrderMapper orderMapper;
     private final OrderDetailService orderDetailService;
+    private final AsyncService asyncService;
 
     @Override
     public OrderDto getById(Integer id, Integer userId) {
         User user = userService.getById(userId);
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
-        if (!order.getCreatedBy().equals(userId) && !user.getRole().getName().equals(RoleConstant.ADMIN)) {
+        if (!order.getCreatedBy().equals(userId) && !user.getRole().getId().equals(RoleConstant.ADMIN.getId())) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN);
         }
         return orderMapper.mapOrderToOrderDto(order);
     }
 
     @Override
-    public PaginationResponseDto<OrderDto> getAllByUserId(Integer userId, PaginationFullRequestDto paginationFullRequestDto) {
-        Pageable pageable = PaginationUtil.buildPageable(paginationFullRequestDto, SortByDataConstant.ORDER);
-        Page<Order> orderPage = orderRepository.getAllByUserId(userId, pageable);
-        PagingMeta meta = PaginationUtil
-                .buildPagingMeta(paginationFullRequestDto, SortByDataConstant.ORDER, orderPage);
-        List<OrderDto> orderDtos = orderMapper.mapOrdersToOrderDtos(orderPage.getContent());
-        return new PaginationResponseDto<>(meta, orderDtos);
+    public List<OrderDto> getAllByUserId(Integer userId) {
+        List<Order> orders = orderRepository.getAllByUserId(userId);
+        return orderMapper.mapOrdersToOrderDtos(orders);
     }
 
     @Override
-    public PaginationResponseDto<OrderDto> getAll(PaginationFullRequestDto paginationFullRequestDto) {
-        Pageable pageable = PaginationUtil.buildPageable(paginationFullRequestDto, SortByDataConstant.ORDER);
-        Page<Order> orderPage = orderRepository.getAll(paginationFullRequestDto.getKeyword(), pageable);
-        PagingMeta meta = PaginationUtil
-                .buildPagingMeta(paginationFullRequestDto, SortByDataConstant.ORDER, orderPage);
-        List<OrderDto> orderDtos = orderMapper.mapOrdersToOrderDtos(orderPage.getContent());
-        return new PaginationResponseDto<>(meta, orderDtos);
+    public List<OrderDto> getAll(Integer status, Integer type) {
+        List<Order> orders = orderRepository.getAll(status, type);
+        return orderMapper.mapOrdersToOrderDtos(orders);
     }
 
     @Override
     public OrderDto create(Integer userId, OrderCreateDto orderCreateDto) {
+        User user = userService.getById(userId);
         Address address = addressRepository.findById(orderCreateDto.getAddressId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Address.ERR_NOT_FOUND_ID, new String[]{orderCreateDto.getAddressId().toString()}));
         if (!address.getCreatedBy().equals(userId)) {
             throw new InvalidException(ErrorMessage.Order.ERR_INVALID_ADDRESS);
         }
+        PaymentType paymentType = paymentTypeRepository.findById(orderCreateDto.getPaymentTypeId())
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.PaymentType.ERR_NOT_FOUND_ID, new String[]{orderCreateDto.getPaymentTypeId().toString()}));
+
 
         long originalPrice = 0L;
         for (OrderProductRequestDto requestDto : orderCreateDto.getOrderProductRequestDtos()) {
@@ -91,12 +85,16 @@ public class OrderServiceImpl implements OrderService {
         }
         long totalPrice = originalPrice + orderCreateDto.getShippingFee();
         Order order = orderMapper.mapOrderCreateDtoToOrder(orderCreateDto);
+        order.setUser(user);
         order.setCustomerName(address.getCustomerName());
         order.setPhone(address.getPhone());
         order.setAddress(address.getAddress());
         order.setOriginalPrice(originalPrice);
         order.setTotalPrice(totalPrice);
-        order.setOrderStatus(orderStatusRepository.getById(StatusConstant.PENDING.getId()));
+        order.setOrderStatus(orderStatusRepository.getById(OrderStatusConstant.WAITING.getId()));
+        order.setPaymentType(paymentType);
+        order.setPaymentStatus(orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.MOMO.getId())
+                || orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.VNPAY.getId()));
         orderRepository.save(order);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -112,27 +110,24 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto updateById(Integer id, OrderUpdateDto orderUpdateDto) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
-        if (orderUpdateDto.getStatusId() > StatusConstant.CANCELLED.getId()
-                || orderUpdateDto.getStatusId() <= StatusConstant.PENDING.getId()) {
+        if (orderUpdateDto.getStatusId() > OrderStatusConstant.CANCELLED.getId()
+                || orderUpdateDto.getStatusId() <= OrderStatusConstant.WAITING.getId()) {
             throw new InvalidException(ErrorMessage.OrderDetail.ERR_INVALID_STATUS_UPDATE);
         }
-        if (order.getOrderStatus().getId().equals(StatusConstant.DELIVERED.getId())
-                || order.getOrderStatus().getId().equals(StatusConstant.CANCELLED.getId())) {
+        if (order.getOrderStatus().getId().equals(OrderStatusConstant.DELIVERED.getId())
+                || order.getOrderStatus().getId().equals(OrderStatusConstant.CANCELLED.getId())) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN_UPDATE_DELETE);
         }
-        order.setOrderStatus(orderStatusRepository.getById(orderUpdateDto.getStatusId()));
-        if (orderUpdateDto.getStatusId().equals(StatusConstant.DELIVERED.getId())) {
+        OrderStatus orderStatus = orderStatusRepository.getById(orderUpdateDto.getStatusId());
+        order.setOrderStatus(orderStatus);
+        if (orderUpdateDto.getStatusId().equals(OrderStatusConstant.DELIVERED.getId())) {
             order.setPaymentStatus(true);
         }
-        return orderMapper.mapOrderToOrderDto(orderRepository.save(order));
-    }
-
-    @Override
-    public CommonResponseDto deleteById(Integer id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
-        orderRepository.delete(order);
-        return new CommonResponseDto(true, MessageConstant.DELETE_ORDER_SUCCESSFULLY);
+        orderRepository.save(order);
+        String message = "Mã đơn hàng: " + order.getId() + "\nTình trạng: " + orderStatus.getName()
+                + "\nTrạng thái thanh toán: " + order.getPaymentStatus() + "\nNgười đặt: " + order.getUser().getUsername();
+        asyncService.sendTelegramMessage(NotificationConfig.ORDER, message);
+        return orderMapper.mapOrderToOrderDto(order);
     }
 
 }

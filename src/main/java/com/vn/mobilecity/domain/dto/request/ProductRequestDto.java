@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class ProductRequestDto {
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     private String name;
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    //@NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     @ValidFileImage
     private MultipartFile avatar;
 
@@ -35,7 +35,7 @@ public class ProductRequestDto {
 
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     private String rearCamera;
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Boolean flashLight;
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     private String rearCameraFeature;
@@ -105,4 +105,9 @@ public class ProductRequestDto {
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Integer categoryId;
+
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private Integer promotionId;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private Long promotionValue;
 }

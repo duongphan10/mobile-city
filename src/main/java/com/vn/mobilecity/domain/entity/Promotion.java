@@ -23,6 +23,6 @@ public class Promotion extends UserDateAuditing {
     private String description;
 
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL)
-    private List<ProductOption> productOptions;
+    private List<Product> products;
 
 }

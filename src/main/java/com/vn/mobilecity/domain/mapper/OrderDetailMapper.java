@@ -14,6 +14,8 @@ public interface OrderDetailMapper {
 
     @Mappings({
             @Mapping(target = "orderId", source = "order.id"),
+            @Mapping(target = "orderStatusId", source = "order.orderStatus.id"),
+            @Mapping(target = "orderStatusName", source = "order.orderStatus.name"),
             @Mapping(target = "productOptionDto", source = "productOption"),
             @Mapping(target = "productOptionDto.productId", source = "productOption.product.id"),
             @Mapping(target = "productOptionDto.productName", source = "productOption.product.name"),

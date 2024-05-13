@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ProductOptionRepository extends JpaRepository<ProductOption, Integer> {
-    @Query(value = "SELECT * FROM product_options WHERE product_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM product_options " +
+            "WHERE ?1 IS NULL OR product_id = ?1", nativeQuery = true)
     List<ProductOption> getAllByProductId(Integer productId);
 }

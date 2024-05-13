@@ -39,8 +39,8 @@ public class ErrorMessage {
         public static final String ERR_ALREADY_EXIST_PHONE = "exception.user.already.exist.phone";
         public static final String ERR_ALREADY_EXIST_EMAIL = "exception.user.already.exist.email";
         public static final String ERR_ALREADY_EXIST_USERNAME = "exception.user.already.exist.username";
-        public static final String ERR_CURRENT_PASSWORD_INCORRECT= "exception.user.current.password.incorrect";
-        public static final String ERR_SAME_PASSWORD= "exception.user.same.password";
+        public static final String ERR_CURRENT_PASSWORD_INCORRECT = "exception.user.current.password.incorrect";
+        public static final String ERR_SAME_PASSWORD = "exception.user.same.password";
     }
 
     public static class Address {
@@ -84,16 +84,12 @@ public class ErrorMessage {
         public static final String ERR_POSITION_ALREADY_EXIST = "exception.slide.position.already.exist";
     }
 
-    public static class DiscountCode {
-        public static final String ERR_NOT_FOUND_ID = "exception.discount.not.found.id";
-        public static final String ERR_NOT_FOUND_CODE = "exception.discount.not.found.code";
-        public static final String EXPIRED_DISCOUNT_CODE = "exception.expired.discount.code";
-        public static final String ERR_ALREADY_USED = "exception.discount.already.used";
+    public static class OrderStatus {
+        public static final String ERR_NOT_FOUND_ID = "exception.order.status.not.found.id";
     }
 
-    public static class UserDiscount {
-        public static final String ERR_NOT_FOUND_ID = "exception.user.discount.not.found.id";
-        public static final String ERR_ALREADY_EXIST = "exception.user.discount.already.exist";
+    public static class PaymentType {
+        public static final String ERR_NOT_FOUND_ID = "exception.payment.type.not.found.id";
     }
 
     public static class Order {
@@ -110,6 +106,10 @@ public class ErrorMessage {
     public static class Review {
         public static final String ERR_NOT_FOUND_ID = "exception.review.not.found.id";
         public static final String ERR_ALREADY_EXIST_WITH_ORDER_DETAIL = "exception.review.already.exist.with.order.detail";
+    }
+
+    public static class Notification {
+        public static final String ERR_NOT_FOUND_ID = "exception.notification.not.found.id";
     }
 
     public static class Message {

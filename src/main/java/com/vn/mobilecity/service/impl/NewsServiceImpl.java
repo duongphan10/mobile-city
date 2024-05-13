@@ -2,10 +2,6 @@ package com.vn.mobilecity.service.impl;
 
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
-import com.vn.mobilecity.constant.SortByDataConstant;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
-import com.vn.mobilecity.domain.dto.pagination.PagingMeta;
 import com.vn.mobilecity.domain.dto.request.NewsRequestDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.NewsDto;
@@ -16,13 +12,9 @@ import com.vn.mobilecity.exception.NotFoundException;
 import com.vn.mobilecity.repository.NewsRepository;
 import com.vn.mobilecity.repository.NewsTypeRepository;
 import com.vn.mobilecity.service.NewsService;
-import com.vn.mobilecity.util.PaginationUtil;
 import com.vn.mobilecity.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -74,12 +66,11 @@ public class NewsServiceImpl implements NewsService {
                         new String[]{updateDto.getNewsTypeId().toString()}));
         newsMapper.updateNews(news, updateDto);
 
-        MultipartFile multipartFile = updateDto.getAvatar();
-        if (multipartFile != null && !multipartFile.isEmpty()) {
+        if (updateDto.getAvatar() != null) {
             uploadFileUtil.destroyImageWithUrl(news.getAvatar());
             news.setAvatar(uploadFileUtil.uploadImage(updateDto.getAvatar()));
-            news.setNewsType(newsType);
         }
+        news.setNewsType(newsType);
         return newsMapper.mapNewsToNewsDto(newsRepository.save(news));
     }
 
@@ -87,6 +78,7 @@ public class NewsServiceImpl implements NewsService {
     public CommonResponseDto deleteById(Integer id) {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.News.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
+        uploadFileUtil.destroyImageWithUrl(news.getAvatar());
         newsRepository.delete(news);
         return new CommonResponseDto(true, MessageConstant.DELETE_NEWS_SUCCESSFULLY);
     }

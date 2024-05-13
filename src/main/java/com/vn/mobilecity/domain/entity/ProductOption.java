@@ -30,17 +30,11 @@ public class ProductOption extends UserDateAuditing {
     @Column(nullable = false)
     private Integer quantity;
     @Column(nullable = false)
-    private Long promotionValue;
-    @Column(nullable = false)
     private Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_OPTION_PRODUCT"))
     private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "promotion_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_OPTION_PROMOTION"))
-    private Promotion promotion;
 
     @OneToMany(mappedBy = "productOption", cascade = CascadeType.ALL)
     private List<Cart> carts;

@@ -2,10 +2,6 @@ package com.vn.mobilecity.service.impl;
 
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
-import com.vn.mobilecity.constant.SortByDataConstant;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
-import com.vn.mobilecity.domain.dto.pagination.PagingMeta;
 import com.vn.mobilecity.domain.dto.request.SlideRequestDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.SlideDto;
@@ -16,15 +12,12 @@ import com.vn.mobilecity.exception.NotFoundException;
 import com.vn.mobilecity.repository.ProductRepository;
 import com.vn.mobilecity.repository.SlideRepository;
 import com.vn.mobilecity.service.SlideService;
-import com.vn.mobilecity.util.PaginationUtil;
 import com.vn.mobilecity.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -42,29 +35,20 @@ public class SlideServiceImpl implements SlideService {
     }
 
     @Override
-    public PaginationResponseDto<SlideDto> getAll(PaginationFullRequestDto paginationFullRequestDto) {
-        Pageable pageable = PaginationUtil.buildPageable(paginationFullRequestDto, SortByDataConstant.SLIDE);
-        Page<Slide> slidePage = slideRepository.getAll(pageable);
-        PagingMeta meta = PaginationUtil
-                .buildPagingMeta(paginationFullRequestDto, SortByDataConstant.SLIDE, slidePage);
-
-        List<SlideDto> slideDtoList = slideMapper.mapSlideToSlideDto(slidePage.getContent());
-        return new PaginationResponseDto<>(meta, slideDtoList);
+    public List<SlideDto> getAll(Boolean status) {
+        List<Slide> slides = slideRepository.getAll(status);
+        return slideMapper.mapSlidesToSlideDtos(slides);
     }
 
     @Override
-    public PaginationResponseDto<SlideDto> getByStatus(PaginationFullRequestDto paginationFullRequestDto, Boolean status) {
-        Pageable pageable = PaginationUtil.buildPageable(paginationFullRequestDto, SortByDataConstant.SLIDE);
-        Page<Slide> slidePage = slideRepository.getByStatus(status, pageable);
-
-        PagingMeta meta = PaginationUtil.buildPagingMeta(paginationFullRequestDto, SortByDataConstant.SLIDE, slidePage);
-        List<SlideDto> slideDtoList = slideMapper.mapSlideToSlideDto(slidePage.getContent());
-        return new PaginationResponseDto<>(meta, slideDtoList);
+    public List<SlideDto> getSlideByUser() {
+        List<Slide> slides = slideRepository.getSlideByUser();
+        return slideMapper.mapSlidesToSlideDtos(slides);
     }
 
     @Override
     public SlideDto create(SlideRequestDto createDto) {
-        if (slideRepository.findByPosition(createDto.getPosition()) != null) {
+        if (slideRepository.existsByPosition(createDto.getPosition())) {
             throw new AlreadyExistException(ErrorMessage.Slide.ERR_POSITION_ALREADY_EXIST, new String[]{createDto.getPosition().toString()});
         }
         Slide slide = slideMapper.mapSlideRequestDtoToSlide(createDto);
@@ -73,13 +57,15 @@ public class SlideServiceImpl implements SlideService {
     }
 
     @Override
-    public SlideDto update(Integer id, SlideRequestDto updateDto) {
+    public SlideDto updateById(Integer id, SlideRequestDto updateDto) {
         Slide slide = slideRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Slide.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
-        slideMapper.updateSlide(slide, updateDto);
+        if (!Objects.equals(updateDto.getPosition(), slide.getPosition()) && slideRepository.existsByPosition(updateDto.getPosition())) {
+            throw new AlreadyExistException(ErrorMessage.Slide.ERR_POSITION_ALREADY_EXIST, new String[]{updateDto.getPosition().toString()});
+        }
 
-        MultipartFile multipartFile = updateDto.getAvatar();
-        if (multipartFile != null && !multipartFile.isEmpty()) {
+        slideMapper.updateSlide(slide, updateDto);
+        if (updateDto.getAvatar() != null) {
             uploadFileUtil.destroyImageWithUrl(slide.getAvatar());
             slide.setAvatar(uploadFileUtil.uploadImage(updateDto.getAvatar()));
         }
@@ -90,6 +76,7 @@ public class SlideServiceImpl implements SlideService {
     public CommonResponseDto deleteById(Integer id) {
         Slide slide = slideRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Slide.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
+        uploadFileUtil.destroyImageWithUrl(slide.getAvatar());
         slideRepository.delete(slide);
         return new CommonResponseDto(true, MessageConstant.DELETE_SLIDE_SUCCESSFULLY);
     }

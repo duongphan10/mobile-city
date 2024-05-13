@@ -36,7 +36,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         User user = userService.getById(userId);
         OrderDetail orderDetail = orderDetailRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
-        if (!orderDetail.getCreatedBy().equals(userId) && !user.getRole().getName().equals(RoleConstant.ADMIN)) {
+        if (!orderDetail.getCreatedBy().equals(userId) && !user.getRole().getId().equals(RoleConstant.ADMIN.getId())) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN);
         }
         return orderDetailMapper.mapOrderDetailToOrderDetailDto(orderDetail);
@@ -47,7 +47,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, new String[]{orderId.toString()}));
         User user = userService.getById(userId);
-        if (!order.getCreatedBy().equals(userId) && !user.getRole().getName().equals(RoleConstant.ADMIN)) {
+        if (!order.getCreatedBy().equals(userId) && !user.getRole().getId().equals(RoleConstant.ADMIN.getId())) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN);
         }
         List<OrderDetail> orderDetails = orderDetailRepository.getAllByOrder(order);

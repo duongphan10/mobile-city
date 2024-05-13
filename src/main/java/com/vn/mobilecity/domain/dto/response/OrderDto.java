@@ -20,10 +20,10 @@ public class OrderDto extends UserDateAuditingDto {
     private Long shippingFee;
     private Long originalPrice;
     private Long totalPrice;
-    private Integer statusId;
-    private String statusName;
+    private Integer orderStatusId;
+    private String orderStatusName;
     private Boolean paymentStatus;
-    private String paymentTypeId;
+    private Integer paymentTypeId;
     private String paymentTypeName;
 
 }

@@ -49,10 +49,11 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto update(Integer id, CategoryRequestDto updateDto) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
-
         categoryMapper.updateCategory(category, updateDto);
-        uploadFileUtil.destroyImageWithUrl(category.getAvatar());
-        category.setAvatar(uploadFileUtil.uploadImage(updateDto.getAvatar()));
+        if (updateDto.getAvatar() != null) {
+            uploadFileUtil.destroyImageWithUrl(category.getAvatar());
+            category.setAvatar(uploadFileUtil.uploadImage(updateDto.getAvatar()));
+        }
         return categoryMapper.mapCategoryToCategoryDto(categoryRepository.save(category));
     }
 
@@ -60,6 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CommonResponseDto deleteById(Integer id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
+        uploadFileUtil.destroyImageWithUrl(category.getAvatar());
         categoryRepository.delete(category);
         return new CommonResponseDto(true, MessageConstant.DELETE_CATEGORY_SUCCESSFULLY);
     }

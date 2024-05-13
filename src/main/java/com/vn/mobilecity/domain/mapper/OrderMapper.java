@@ -17,8 +17,8 @@ public interface OrderMapper {
 
     @Mappings({
             @Mapping(target = "userId", source = "user.id"),
-            @Mapping(target = "statusId", source = "orderStatus.id"),
-            @Mapping(target = "statusName", source = "orderStatus.name"),
+            @Mapping(target = "orderStatusId", source = "orderStatus.id"),
+            @Mapping(target = "orderStatusName", source = "orderStatus.name"),
             @Mapping(target = "paymentTypeId", source = "paymentType.id"),
             @Mapping(target = "paymentTypeName", source = "paymentType.name"),
     })

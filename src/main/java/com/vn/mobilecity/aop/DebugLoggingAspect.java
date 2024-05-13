@@ -15,7 +15,7 @@ import org.springframework.util.StopWatch;
 
 /**
  * Aspect for logging execution of service and repository Spring components.
- *
+ * <p>
  * By default, it only runs with the "dev" profile.
  */
 @Aspect
@@ -23,7 +23,7 @@ public class DebugLoggingAspect {
 
     private final Environment env;
 
-//    static final String LOGGING_FORMAT = "--:\n-IP-ADDRESS: {},\n-REQUEST METHOD: {}.{}(),\n-ARGS: {},\n-RESULT: {},\n-EXECUTION TIME: {} ms";
+    //    static final String LOGGING_FORMAT = "--:\n-IP-ADDRESS: {},\n-REQUEST METHOD: {}.{}(),\n-ARGS: {},\n-RESULT: {},\n-EXECUTION TIME: {} ms";
     public DebugLoggingAspect(Environment env) {
         this.env = env;
     }
@@ -55,7 +55,7 @@ public class DebugLoggingAspect {
     /**
      * Pointcut that matches all Spring beans in the application's main packages.
      */
-    @Pointcut("within(com.vn.mobilecity.controller..*)"+
+    @Pointcut("within(com.vn.mobilecity.controller..*)" +
             " || within(com.vn.mobilecity.service..*)")
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
@@ -75,7 +75,7 @@ public class DebugLoggingAspect {
      * Advice that logs methods throwing exceptions.
      *
      * @param joinPoint join point for advice.
-     * @param e exception.
+     * @param e         exception.
      */
     @AfterThrowing(pointcut = "applicationPackagePointcut()" +
             " && controllerPointcut() " +

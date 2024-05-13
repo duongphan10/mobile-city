@@ -109,10 +109,16 @@ public class Product extends UserDateAuditing {
     private String launchDate;
     @Column(nullable = false)
     private String description;
+    @Column(nullable = false)
+    private Long promotionValue;
 
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY"))
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "promotion_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_PROMOTION"))
+    private Promotion promotion;
 
     @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
     private List<ProductOption> productOptions;

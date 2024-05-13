@@ -30,8 +30,5 @@ public class ProductOptionUpdateDto {
     private Integer quantity;
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Boolean status;
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Integer promotionId;
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Long promotionValue;
+
 }

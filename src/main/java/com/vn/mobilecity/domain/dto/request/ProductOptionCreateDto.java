@@ -24,7 +24,7 @@ public class ProductOptionCreateDto {
     private Integer storageCapacity;
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     private String color;
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    //@NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     @ValidFileImage
     private MultipartFile image;
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
@@ -33,9 +33,5 @@ public class ProductOptionCreateDto {
     private Integer quantity;
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Boolean status;
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Integer promotionId;
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Long promotionValue;
 
 }

@@ -1,7 +1,7 @@
 package com.vn.mobilecity.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vn.mobilecity.domain.entity.common.UserDateAuditing;
+import com.vn.mobilecity.domain.entity.common.DateAuditing;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "payment_types")
-public class PaymentType extends UserDateAuditing {
+public class PaymentType extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,5 @@ public class PaymentType extends UserDateAuditing {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentType")
     private List<Order> orders;
-
 
 }

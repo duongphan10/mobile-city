@@ -1,6 +1,6 @@
 package com.vn.mobilecity.domain.entity;
 
-import com.vn.mobilecity.domain.entity.common.UserDateAuditing;
+import com.vn.mobilecity.domain.entity.common.DateAuditing;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "order_status")
-public class OrderStatus extends UserDateAuditing {
+public class OrderStatus extends DateAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

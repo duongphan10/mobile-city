@@ -14,13 +14,13 @@ public interface SlideMapper {
     })
     Slide mapSlideRequestDtoToSlide(SlideRequestDto createDto);
 
+    SlideDto mapSlideToSlideDto(Slide slide);
+
+    List<SlideDto> mapSlidesToSlideDtos(List<Slide> slides);
+
     @Mappings({
             @Mapping(target = "avatar", ignore = true)
     })
     void updateSlide(@MappingTarget Slide slide, SlideRequestDto updateDto);
 
-
-    SlideDto mapSlideToSlideDto(Slide slide);
-
-    List<SlideDto> mapSlideToSlideDto(List<Slide> slides);
 }

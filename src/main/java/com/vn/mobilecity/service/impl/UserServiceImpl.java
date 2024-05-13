@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = userMapper.mapUserCreateDtoToUser(userCreateDto);
         user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
-        user.setRole(roleRepository.findByName(RoleConstant.USER));
+        user.setRole(roleRepository.findByName(RoleConstant.USER.getName()));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setEnabled(true);

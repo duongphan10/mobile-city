@@ -18,8 +18,6 @@ public interface ProductOptionMapper {
     @Mappings({
             @Mapping(target = "productId", source = "product.id"),
             @Mapping(target = "productName", source = "product.name"),
-            @Mapping(target = "promotionId", source = "promotion.id"),
-            @Mapping(target = "promotionName", source = "promotion.name"),
     })
     ProductOptionDto mapProductOptionToProductOptionDto(ProductOption productOption);
 

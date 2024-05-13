@@ -12,12 +12,15 @@ import java.util.List;
 public interface ProductMapper {
     @Mappings({
             @Mapping(target = "avatar", ignore = true),
+            @Mapping(target = "promotionValue", source = "promotionValue"),
     })
     Product mapProductRequestDtoToProduct(ProductRequestDto productRequestDto);
 
     @Mappings({
             @Mapping(target = "categoryId", source = "category.id"),
-            @Mapping(target = "categoryName", source = "category.name")
+            @Mapping(target = "categoryName", source = "category.name"),
+            @Mapping(target = "promotionId", source = "promotion.id"),
+            @Mapping(target = "promotionName", source = "promotion.name"),
     })
     ProductDto mapProductToProductDto(Product product);
 
@@ -27,6 +30,8 @@ public interface ProductMapper {
             @Mapping(target = "categoryId", source = "category.id"),
             @Mapping(target = "categoryName", source = "category.name"),
             @Mapping(target = "productOptionDtos", source = "productOptions"),
+            @Mapping(target = "promotionId", source = "promotion.id"),
+            @Mapping(target = "promotionName", source = "promotion.name"),
     })
     ProductSimpleDto mapProductToProductSimpleDto(Product product);
 

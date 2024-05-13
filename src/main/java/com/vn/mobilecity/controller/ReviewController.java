@@ -3,7 +3,6 @@ package com.vn.mobilecity.controller;
 import com.vn.mobilecity.base.BaseResponse;
 import com.vn.mobilecity.base.RestApiV1;
 import com.vn.mobilecity.constant.UrlConstant;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
 import com.vn.mobilecity.domain.dto.request.ReviewCreateDto;
 import com.vn.mobilecity.domain.dto.request.ReviewUpdateDto;
 import com.vn.mobilecity.security.CurrentUser;
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,12 +31,18 @@ public class ReviewController {
     }
 
     @Tag(name = "review-controller")
-    @Operation(summary = "API search review")
+    @Operation(summary = "API get all review by product")
     @GetMapping(UrlConstant.Review.GET_ALL)
-    public ResponseEntity<?> searchReview(@RequestParam(name = "productId") Integer productId,
-                                          @RequestParam(name = "star", required = false) Integer star,
-                                          @Valid @ParameterObject PaginationFullRequestDto paginationFullRequestDto) {
-        return BaseResponse.success(reviewService.search(productId, star, paginationFullRequestDto));
+    public ResponseEntity<?> getReview(@RequestParam(name = "productId") Integer productId,
+                                       @RequestParam(name = "star", required = false) Integer star) {
+        return BaseResponse.success(reviewService.search(productId, star));
+    }
+
+    @Tag(name = "review-controller")
+    @Operation(summary = "API count star review by product")
+    @GetMapping(UrlConstant.Review.GET_STAR)
+    public ResponseEntity<?> getStarReview(@RequestParam(name = "productId") Integer productId) {
+        return BaseResponse.success(reviewService.countStar(productId));
     }
 
     @Tag(name = "review-controller")

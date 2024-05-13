@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequiredArgsConstructor
 @RestApiV1
@@ -31,7 +32,7 @@ public class OrderDetailController {
     @Tag(name = "order-detail-controller")
     @Operation(summary = "API get all order detail by order id")
     @GetMapping(UrlConstant.OrderDetail.GET_ALL)
-    public ResponseEntity<?> getAllOrderDetail(@PathVariable Integer orderId,
+    public ResponseEntity<?> getAllOrderDetail(@RequestParam(name = "orderId") Integer orderId,
                                                @Parameter(name = "principal", hidden = true)
                                                @CurrentUser UserPrincipal user) {
         return BaseResponse.success(orderDetailService.getAllByOrderId(orderId, user.getId()));

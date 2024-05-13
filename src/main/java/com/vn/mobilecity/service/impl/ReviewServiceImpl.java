@@ -2,11 +2,7 @@ package com.vn.mobilecity.service.impl;
 
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
-import com.vn.mobilecity.constant.SortByDataConstant;
-import com.vn.mobilecity.constant.StatusConstant;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
-import com.vn.mobilecity.domain.dto.pagination.PagingMeta;
+import com.vn.mobilecity.constant.OrderStatusConstant;
 import com.vn.mobilecity.domain.dto.request.ReviewCreateDto;
 import com.vn.mobilecity.domain.dto.request.ReviewUpdateDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
@@ -21,11 +17,8 @@ import com.vn.mobilecity.exception.NotFoundException;
 import com.vn.mobilecity.repository.*;
 import com.vn.mobilecity.service.ReviewFileService;
 import com.vn.mobilecity.service.ReviewService;
-import com.vn.mobilecity.util.PaginationUtil;
 import com.vn.mobilecity.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,23 +45,35 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public PaginationResponseDto<ReviewDto> search(Integer productId, Integer star, PaginationFullRequestDto paginationFullRequestDto) {
+    public List<ReviewDto> search(Integer productId, Integer star) {
         productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, new String[]{productId.toString()}));
 
-        Pageable pageable = PaginationUtil.buildPageable(paginationFullRequestDto, SortByDataConstant.REVIEW);
-        Page<Review> reviewPage = reviewRepository.search(productId, star, pageable);
-        PagingMeta meta = PaginationUtil
-                .buildPagingMeta(paginationFullRequestDto, SortByDataConstant.REVIEW, reviewPage);
-        List<ReviewDto> reviewDtos = reviewMapper.mapReviewsToReviewDtos(reviewPage.getContent());
-        return new PaginationResponseDto<>(meta, reviewDtos);
+        List<Review> reviews = reviewRepository.search(productId, star);
+        return reviewMapper.mapReviewsToReviewDtos(reviews);
+    }
+
+    @Override
+    public double countStar(Integer productId) {
+        productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, new String[]{productId.toString()}));
+
+        double result = 0.0, totalStar = 0.0;
+        List<Review> reviews = reviewRepository.search(productId, null);
+        if (reviews.size() != 0) {
+            for (Review review : reviews) {
+                totalStar += review.getStar();
+            }
+            result = totalStar / (double) reviews.size();
+        }
+        return result;
     }
 
     @Override
     public ReviewDto create(Integer userId, ReviewCreateDto reviewCreateDto) {
         OrderDetail orderDetail = orderDetailRepository.findById(reviewCreateDto.getOrderDetailId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, new String[]{reviewCreateDto.getOrderDetailId().toString()}));
-        if (!orderDetail.getOrder().getOrderStatus().getId().equals(StatusConstant.DELIVERED.getId())) {
+        if (!orderDetail.getOrder().getOrderStatus().getId().equals(OrderStatusConstant.DELIVERED.getId())) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN);
         }
         if (orderDetail.getReview() != null) {

@@ -1,17 +1,17 @@
 package com.vn.mobilecity.service;
 
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
 import com.vn.mobilecity.domain.dto.request.CartCreateDto;
 import com.vn.mobilecity.domain.dto.request.CartUpdateDto;
 import com.vn.mobilecity.domain.dto.response.CartDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 
+import java.util.List;
+
 public interface CartService {
 
-    PaginationResponseDto<CartDto> getAll(Integer userId, PaginationFullRequestDto paginationFullRequestDto);
+    List<CartDto> getAll(Integer userId);
 
-    int getNumberItem(Integer userId);
+    int countTotalItem(Integer userId);
 
     CartDto create(Integer userId, CartCreateDto cartCreateDto);
 

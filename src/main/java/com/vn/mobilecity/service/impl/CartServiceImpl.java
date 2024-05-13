@@ -2,10 +2,6 @@ package com.vn.mobilecity.service.impl;
 
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
-import com.vn.mobilecity.constant.SortByDataConstant;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
-import com.vn.mobilecity.domain.dto.pagination.PagingMeta;
 import com.vn.mobilecity.domain.dto.request.CartCreateDto;
 import com.vn.mobilecity.domain.dto.request.CartUpdateDto;
 import com.vn.mobilecity.domain.dto.response.CartDto;
@@ -20,10 +16,7 @@ import com.vn.mobilecity.repository.CartRepository;
 import com.vn.mobilecity.repository.ProductOptionRepository;
 import com.vn.mobilecity.repository.UserRepository;
 import com.vn.mobilecity.service.CartService;
-import com.vn.mobilecity.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,21 +31,14 @@ public class CartServiceImpl implements CartService {
     private final CartMapper cartMapper;
 
     @Override
-    public PaginationResponseDto<CartDto> getAll(Integer userId, PaginationFullRequestDto paginationFullRequestDto) {
-        Pageable pageable = PaginationUtil
-                .buildPageable(paginationFullRequestDto, SortByDataConstant.CART);
-        Page<Cart> cartPage = cartRepository.getAllByUser(userId, pageable);
-        PagingMeta meta = PaginationUtil
-                .buildPagingMeta(paginationFullRequestDto, SortByDataConstant.CART, cartPage);
-
-        List<CartDto> cartDtos = cartMapper.mapCartsToCartDtos(cartPage.getContent());
-
-        return new PaginationResponseDto<>(meta, cartDtos);
+    public List<CartDto> getAll(Integer userId) {
+        List<Cart> carts = cartRepository.getAllByUser(userId);
+        return cartMapper.mapCartsToCartDtos(carts);
     }
 
     @Override
-    public int getNumberItem(Integer userId) {
-        return cartRepository.getNumberItem(userId);
+    public int countTotalItem(Integer userId) {
+        return cartRepository.countTotalItem(userId);
     }
 
     @Override

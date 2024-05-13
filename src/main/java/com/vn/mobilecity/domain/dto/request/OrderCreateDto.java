@@ -27,5 +27,5 @@ public class OrderCreateDto {
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Long shippingFee;
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Boolean paymentStatus;
+    private Integer paymentTypeId;
 }

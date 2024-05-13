@@ -22,22 +22,22 @@ public class ProductOptionController {
 
     @Tag(name = "product-option-controller")
     @Operation(summary = "API get product option by id")
-    @GetMapping(UrlConstant.Product.GET_OPTION_BY_ID)
+    @GetMapping(UrlConstant.ProductOption.GET_OPTION_BY_ID)
     public ResponseEntity<?> getProductOptionById(@PathVariable Integer id) {
         return BaseResponse.success(productOptionService.getById(id));
     }
 
     @Tag(name = "product-option-controller")
     @Operation(summary = "API get all option by product")
-    @GetMapping(UrlConstant.Product.GET_ALL_OPTION)
-    public ResponseEntity<?> getAllProductOption(@PathVariable Integer productId) {
-        return BaseResponse.success(productOptionService.getAllByProductId(productId));
+    @GetMapping(UrlConstant.ProductOption.GET_ALL_OPTION)
+    public ResponseEntity<?> getAllProductOption(@RequestParam(name = "productId", required = false) Integer productId) {
+        return BaseResponse.success(productOptionService.getAllProductOption(productId));
     }
 
     @Tag(name = "product-option-controller")
     @Operation(summary = "API create option of product")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(UrlConstant.Product.CREATE_OPTION)
+    @PostMapping(UrlConstant.ProductOption.CREATE_OPTION)
     public ResponseEntity<?> createProductOption(@Valid @ModelAttribute ProductOptionCreateDto productOptionCreateDto) {
         return BaseResponse.success(productOptionService.create(productOptionCreateDto));
     }
@@ -45,7 +45,7 @@ public class ProductOptionController {
     @Tag(name = "product-option-controller")
     @Operation(summary = "API update product option by id")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping(UrlConstant.Product.UPDATE_OPTION)
+    @PatchMapping(UrlConstant.ProductOption.UPDATE_OPTION)
     public ResponseEntity<?> updateProductOptionById(@PathVariable Integer id,
                                                      @Valid @ModelAttribute ProductOptionUpdateDto productOptionUpdateDto) {
         return BaseResponse.success(productOptionService.updateById(id, productOptionUpdateDto));
@@ -54,7 +54,7 @@ public class ProductOptionController {
     @Tag(name = "product-option-controller")
     @Operation(summary = "API delete product option by id")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(UrlConstant.Product.DELETE_OPTION)
+    @DeleteMapping(UrlConstant.ProductOption.DELETE_OPTION)
     public ResponseEntity<?> deleteProductOptionById(@PathVariable Integer id) {
         return BaseResponse.success(productOptionService.deleteById(id));
     }

@@ -1,7 +1,5 @@
 package com.vn.mobilecity.service;
 
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
 import com.vn.mobilecity.domain.dto.request.NewsRequestDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.NewsDto;

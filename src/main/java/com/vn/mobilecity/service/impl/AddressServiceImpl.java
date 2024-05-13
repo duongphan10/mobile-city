@@ -32,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
         User user = userService.getById(userId);
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Address.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
-        if (!address.getCreatedBy().equals(userId) && !user.getRole().getName().equals(RoleConstant.ADMIN)) {
+        if (!address.getCreatedBy().equals(userId) && !user.getRole().getId().equals(RoleConstant.ADMIN.getId())) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN);
         }
         return addressMapper.mapAddressToAddressDto(address);

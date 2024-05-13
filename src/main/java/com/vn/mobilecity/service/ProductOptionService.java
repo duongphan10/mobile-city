@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProductOptionService {
     ProductOptionDto getById(Integer id);
 
-    List<ProductOptionDto> getAllByProductId(Integer productId);
+    List<ProductOptionDto> getAllProductOption(Integer productId);
 
     ProductOptionDto create(ProductOptionCreateDto productOptionCreateDto);
 

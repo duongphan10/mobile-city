@@ -3,7 +3,6 @@ package com.vn.mobilecity.controller;
 import com.vn.mobilecity.base.BaseResponse;
 import com.vn.mobilecity.base.RestApiV1;
 import com.vn.mobilecity.constant.UrlConstant;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
 import com.vn.mobilecity.domain.dto.request.CartCreateDto;
 import com.vn.mobilecity.domain.dto.request.CartUpdateDto;
 import com.vn.mobilecity.security.CurrentUser;
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,17 +27,16 @@ public class CartController {
     @Operation(summary = "API get all item of cart")
     @GetMapping(UrlConstant.Cart.GET_ALL)
     public ResponseEntity<?> getAllCart(@Parameter(name = "principal", hidden = true)
-                                        @CurrentUser UserPrincipal user,
-                                        @Valid @ParameterObject PaginationFullRequestDto paginationFullRequestDto) {
-        return BaseResponse.success(cartService.getAll(user.getId(), paginationFullRequestDto));
+                                        @CurrentUser UserPrincipal user) {
+        return BaseResponse.success(cartService.getAll(user.getId()));
     }
 
     @Tag(name = "cart-controller")
-    @Operation(summary = "API get number item in cart")
-    @GetMapping(UrlConstant.Cart.GET_NUMBER_OF_ITEM)
-    public ResponseEntity<?> getNumberItem(@Parameter(name = "principal", hidden = true)
-                                           @CurrentUser UserPrincipal user) {
-        return BaseResponse.success(cartService.getNumberItem(user.getId()));
+    @Operation(summary = "API count item in cart")
+    @GetMapping(UrlConstant.Cart.COUNT_ITEM)
+    public ResponseEntity<?> countTotalItem(@Parameter(name = "principal", hidden = true)
+                                            @CurrentUser UserPrincipal user) {
+        return BaseResponse.success(cartService.countTotalItem(user.getId()));
     }
 
     @Tag(name = "cart-controller")
