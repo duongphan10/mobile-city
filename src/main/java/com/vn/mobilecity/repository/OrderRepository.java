@@ -13,8 +13,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query(value = "SELECT * FROM orders o " +
             "WHERE " +
             "   o.created_by = ?1 " +
+            "   AND (?2 IS NULL OR o.order_status_id = ?2) " +
             "ORDER BY o.created_date DESC ", nativeQuery = true)
-    List<Order> getAllByUserId(Integer userId);
+    List<Order> getAllByUserId(Integer userId, Integer status);
 
     @Query(value = "SELECT * FROM orders o " +
             "LEFT JOIN order_status s ON o.order_status_id = s.id " +

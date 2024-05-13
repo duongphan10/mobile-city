@@ -26,6 +26,7 @@ import com.vn.mobilecity.util.CodeUtil;
 import com.vn.mobilecity.util.SendMailUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -51,6 +52,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final OTPRepository OTPRepository;
     private final SendMailUtil sendMailUtil;
+
+    @Value("${verification.code.expiration.minutes}")
+    private Integer VERIFICATION_CODE_EXPIRATION_MINUTES;
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
@@ -89,6 +93,7 @@ public class AuthServiceImpl implements AuthService {
     public CommonResponseDto logout(HttpServletRequest request,
                                     HttpServletResponse response, Authentication authentication) {
         new SecurityContextLogoutHandler().logout(request, response, authentication);
+        request.getSession().invalidate();
         return new CommonResponseDto(true, MessageConstant.SUCCESSFULLY_LOGOUT);
     }
 
@@ -98,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_WITH_EMAIL, new String[]{requestDto.getEmail()}));
 
         String verificationCode = CodeUtil.generateCode(CommonConstant.VERIFICATION_C0DE_LENGTH);
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(CommonConstant.VERIFICATION_CODE_EXPIRATION_MINUTES);
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(VERIFICATION_CODE_EXPIRATION_MINUTES);
 
         OTP otp = OTPRepository.findByUserId(user.getId());
         if (otp != null) {
@@ -112,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             Map<String, Object> props = new HashMap<>();
             props.put("username", user.getUsername());
-            props.put("expirationTime", CommonConstant.VERIFICATION_CODE_EXPIRATION_MINUTES);
+            props.put("expirationTime", VERIFICATION_CODE_EXPIRATION_MINUTES);
             props.put("code", verificationCode);
             DataMailDto mail = new DataMailDto(user.getEmail(), MessageConstant.SUBJECT_MAIL_RESET_PASSWORD, null, props);
             sendMailUtil.sendEmailWithHTML(mail, "verify-forgot-password.html");

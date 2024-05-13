@@ -1,10 +1,7 @@
 package com.vn.mobilecity.service.impl;
 
 import com.vn.mobilecity.config.NotificationConfig;
-import com.vn.mobilecity.constant.ErrorMessage;
-import com.vn.mobilecity.constant.OrderStatusConstant;
-import com.vn.mobilecity.constant.PaymentTypeConstant;
-import com.vn.mobilecity.constant.RoleConstant;
+import com.vn.mobilecity.constant.*;
 import com.vn.mobilecity.domain.dto.request.OrderCreateDto;
 import com.vn.mobilecity.domain.dto.request.OrderProductRequestDto;
 import com.vn.mobilecity.domain.dto.request.OrderUpdateDto;
@@ -20,13 +17,16 @@ import com.vn.mobilecity.service.OrderDetailService;
 import com.vn.mobilecity.service.OrderService;
 import com.vn.mobilecity.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final AddressRepository addressRepository;
@@ -38,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final OrderDetailService orderDetailService;
     private final AsyncService asyncService;
+    private final NotificationConfig notificationConfig;
 
     @Override
     public OrderDto getById(Integer id, Integer userId) {
@@ -51,8 +52,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> getAllByUserId(Integer userId) {
-        List<Order> orders = orderRepository.getAllByUserId(userId);
+    public List<OrderDto> getAllByUserId(Integer userId, Integer status) {
+        List<Order> orders = orderRepository.getAllByUserId(userId, status);
         return orderMapper.mapOrdersToOrderDtos(orders);
     }
 
@@ -107,15 +108,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto updateById(Integer id, OrderUpdateDto orderUpdateDto) {
+    public OrderDto updateById(Integer userId, Integer id, OrderUpdateDto orderUpdateDto) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Order.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
+        OrderStatus oldStatus = order.getOrderStatus();
         if (orderUpdateDto.getStatusId() > OrderStatusConstant.CANCELLED.getId()
-                || orderUpdateDto.getStatusId() <= OrderStatusConstant.WAITING.getId()) {
-            throw new InvalidException(ErrorMessage.OrderDetail.ERR_INVALID_STATUS_UPDATE);
+                || orderUpdateDto.getStatusId() < OrderStatusConstant.WAITING.getId()) {
+            throw new InvalidException(ErrorMessage.Order.ERR_INVALID_STATUS_UPDATE);
         }
-        if (order.getOrderStatus().getId().equals(OrderStatusConstant.DELIVERED.getId())
-                || order.getOrderStatus().getId().equals(OrderStatusConstant.CANCELLED.getId())) {
+        if (oldStatus.getId().equals(OrderStatusConstant.DELIVERED.getId())
+                || oldStatus.getId().equals(OrderStatusConstant.CANCELLED.getId())) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN_UPDATE_DELETE);
         }
         OrderStatus orderStatus = orderStatusRepository.getById(orderUpdateDto.getStatusId());
@@ -124,9 +126,22 @@ public class OrderServiceImpl implements OrderService {
             order.setPaymentStatus(true);
         }
         orderRepository.save(order);
-        String message = "Mã đơn hàng: " + order.getId() + "\nTình trạng: " + orderStatus.getName()
-                + "\nTrạng thái thanh toán: " + order.getPaymentStatus() + "\nNgười đặt: " + order.getUser().getUsername();
-        asyncService.sendTelegramMessage(NotificationConfig.ORDER, message);
+
+        // send message telegram
+        if (!oldStatus.getId().equals(orderStatus.getId())) {
+            User user = userService.getById(userId);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonConstant.PATTERN_DATE_TIME_COMMON);
+            String message =
+                    "Mã đơn hàng: " + order.getId() +
+                    "\nTrạng thái mới: " + orderStatus.getName() +
+                    "\nTrạng thái cũ: " + oldStatus.getName() +
+                    "\nThanh toán: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
+                    "\nNgười đặt: " + order.getUser().getPhone() + " - " + order.getUser().getEmail() + " - " + order.getUser().getUsername() +
+                    "\nNgày đặt: " + order.getCreatedDate().format(formatter) +
+                    "\nNgười cập nhật: " + user.getUsername();
+            asyncService.sendTelegramMessage(notificationConfig.ORDER, message);
+        }
+
         return orderMapper.mapOrderToOrderDto(order);
     }
 

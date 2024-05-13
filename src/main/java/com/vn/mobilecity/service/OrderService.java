@@ -10,12 +10,12 @@ public interface OrderService {
 
     OrderDto getById(Integer id, Integer userId);
 
-    List<OrderDto> getAllByUserId(Integer userId);
+    List<OrderDto> getAllByUserId(Integer userId, Integer status);
 
     List<OrderDto> getAll(Integer status, Integer type);
 
     OrderDto create(Integer userId, OrderCreateDto orderCreateDto);
 
-    OrderDto updateById(Integer id, OrderUpdateDto orderUpdateDto);
+    OrderDto updateById(Integer userId, Integer id, OrderUpdateDto orderUpdateDto);
 
 }

@@ -42,11 +42,12 @@ public class OrderController {
     }
 
     @Tag(name = "order-controller")
-    @Operation(summary = "API get all order")
+    @Operation(summary = "API get order by user")
     @GetMapping(UrlConstant.Order.GET_ALL_BY_USER)
-    public ResponseEntity<?> getMyOrder(@Parameter(name = "principal", hidden = true)
+    public ResponseEntity<?> getMyOrder(@RequestParam(name = "status", required = false) Integer status,
+                                        @Parameter(name = "principal", hidden = true)
                                         @CurrentUser UserPrincipal user) {
-        return BaseResponse.success(orderService.getAllByUserId(user.getId()));
+        return BaseResponse.success(orderService.getAllByUserId(user.getId(), status));
     }
 
     @Tag(name = "order-controller")
@@ -63,8 +64,10 @@ public class OrderController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(UrlConstant.Order.UPDATE)
     public ResponseEntity<?> updateOrderById(@PathVariable Integer id,
-                                             @Valid @RequestBody OrderUpdateDto orderUpdateDto) {
-        return BaseResponse.success(orderService.updateById(id, orderUpdateDto));
+                                             @Valid @RequestBody OrderUpdateDto orderUpdateDto,
+                                             @Parameter(name = "principal", hidden = true)
+                                             @CurrentUser UserPrincipal user) {
+        return BaseResponse.success(orderService.updateById(user.getId(), id, orderUpdateDto));
     }
 
 }

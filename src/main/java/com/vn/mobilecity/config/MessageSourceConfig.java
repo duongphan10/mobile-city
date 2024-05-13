@@ -31,7 +31,8 @@ public class MessageSourceConfig {
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver resolver = new AcceptHeaderLocaleResolver();
-        resolver.setDefaultLocale(Locale.US); // Đặt ngôn ngữ mặc định nếu không tìm thấy trong header Accept-Language
+        // Đặt ngôn ngữ mặc định nếu không tìm thấy trong header Accept-Language
+        resolver.setDefaultLocale(new Locale("vi", "VN"));
         return resolver;
     }
 

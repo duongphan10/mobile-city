@@ -22,7 +22,8 @@ public class TelegramUtil {
 
         try {
             Response response = client.newCall(request).execute();
-            log.info("SendMessageTelegram: " + response.body());
+            log.info("SendMessageTelegram status: " + response.code());
+            response.close();
         } catch (Exception e) {
             log.error("SendMessageTelegram throw exception: " + e.getMessage());
         }

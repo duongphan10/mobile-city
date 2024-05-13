@@ -95,12 +95,12 @@ public class ErrorMessage {
     public static class Order {
         public static final String ERR_NOT_FOUND_ID = "exception.order.not.found.id";
         public static final String ERR_INVALID_ADDRESS = "exception.order.invalid.address";
-        public static final String ERR_INVALID_PRODUCT_OPTION = "exception.invalid.product.option";
+        public static final String ERR_INVALID_PRODUCT_OPTION = "exception.order.invalid.product.option";
+        public static final String ERR_INVALID_STATUS_UPDATE = "exception.order.invalid.status";
     }
 
     public static class OrderDetail {
         public static final String ERR_NOT_FOUND_ID = "exception.order.detail.not.found.id";
-        public static final String ERR_INVALID_STATUS_UPDATE = "exception.order.detail.invalid.status";
     }
 
     public static class Review {
