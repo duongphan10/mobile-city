@@ -23,7 +23,7 @@ public class UserCreateDto {
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     @Email(message = ErrorMessage.INVALID_FORMAT_EMAIL)
     private String email;
-    @NotBlank(message = ErrorMessage.INVALID_FORMAT_PASSWORD)
+    @NotBlank(message = ErrorMessage.INVALID_FORMAT_USERNAME)
     @Pattern(regexp = RegexConstant.USERNAME, message = ErrorMessage.INVALID_FORMAT_USERNAME)
     private String username;
     @NotBlank(message = ErrorMessage.INVALID_FORMAT_PASSWORD)

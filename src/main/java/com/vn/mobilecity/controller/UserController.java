@@ -47,8 +47,8 @@ public class UserController {
     @Operation(summary = "API get all user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(UrlConstant.User.GET_ALL)
-    public ResponseEntity<?> getAllUser(@Valid @ParameterObject PaginationFullRequestDto requestDTO) {
-        return BaseResponse.success(userService.getAll(requestDTO));
+    public ResponseEntity<?> getAllUser() {
+        return BaseResponse.success(userService.getAll());
     }
 
     @Tag(name = "user-controller")

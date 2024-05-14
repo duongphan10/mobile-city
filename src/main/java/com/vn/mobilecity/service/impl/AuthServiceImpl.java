@@ -14,6 +14,7 @@ import com.vn.mobilecity.domain.dto.response.TokenRefreshResponseDto;
 import com.vn.mobilecity.domain.entity.OTP;
 import com.vn.mobilecity.domain.entity.User;
 import com.vn.mobilecity.exception.InternalServerException;
+import com.vn.mobilecity.exception.InvalidException;
 import com.vn.mobilecity.exception.NotFoundException;
 import com.vn.mobilecity.exception.UnauthorizedException;
 import com.vn.mobilecity.repository.OTPRepository;
@@ -78,9 +79,11 @@ public class AuthServiceImpl implements AuthService {
             String refreshToken = jwtTokenProvider.generateToken(userPrincipal, Boolean.TRUE);
             return new LoginResponseDto(accessToken, refreshToken, userPrincipal.getId(), authentication.getAuthorities());
         } catch (InternalAuthenticationServiceException e) {
-            throw new UnauthorizedException(ErrorMessage.Auth.ERR_INCORRECT_USERNAME);
+            throw new InvalidException(ErrorMessage.Auth.ERR_INCORRECT_USERNAME);
         } catch (BadCredentialsException e) {
-            throw new UnauthorizedException(ErrorMessage.Auth.ERR_INCORRECT_PASSWORD);
+            throw new InvalidException(ErrorMessage.Auth.ERR_INCORRECT_PASSWORD);
+        } catch (Exception e) {
+            throw new InternalServerException(ErrorMessage.ERR_EXCEPTION_GENERAL);
         }
     }
 

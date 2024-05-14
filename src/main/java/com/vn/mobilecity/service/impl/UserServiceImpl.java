@@ -50,22 +50,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PaginationResponseDto<UserDto> getAll(PaginationFullRequestDto paginationFullRequestDto) {
-        //Pagination
-        //paginationFullRequestDto.setIsAscending(true);
-        int pageSize = paginationFullRequestDto.getPageSize() != CommonConstant.PAGE_SIZE_DEFAULT
-                ? paginationFullRequestDto.getPageSize() : CommonConstant.NUM_OF_USER_PER_PAGE;
-        paginationFullRequestDto.setPageSize(pageSize);
-        Pageable pageable = PaginationUtil.buildPageable(paginationFullRequestDto, SortByDataConstant.USER);
-
-        //Create Output
-        Page<User> userPage = userRepository.findAll(pageable);
-        PagingMeta meta = PaginationUtil
-                .buildPagingMeta(paginationFullRequestDto, SortByDataConstant.USER, userPage);
-
-        List<UserDto> userDtos =
-                userMapper.mapUsersToUserDtos(userPage.getContent());
-        return new PaginationResponseDto<>(meta, userDtos);
+    public List<UserDto> getAll() {
+        List<User> users = userRepository.findAll();
+        return userMapper.mapUsersToUserDtos(users);
     }
 
     @Override

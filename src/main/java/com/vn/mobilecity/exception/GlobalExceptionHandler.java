@@ -15,6 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -39,23 +41,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleConstraintViolationException(ConstraintViolationException ex) {
-        Map<String, String> result = new LinkedHashMap<>();
-        ex.getConstraintViolations().forEach((error) -> {
-            String fieldName = ((PathImpl) error.getPropertyPath()).getLeafNode().getName();
-            String errorMessage = messageSource.getMessage(Objects.requireNonNull(error.getMessage()), null,
+//        Map<String, String> result = new LinkedHashMap<>();
+//        ex.getConstraintViolations().forEach((error) -> {
+//            String fieldName = ((PathImpl) error.getPropertyPath()).getLeafNode().getName();
+//            String errorMessage = messageSource.getMessage(Objects.requireNonNull(error.getMessage()), null,
+//                    LocaleContextHolder.getLocale());
+//            result.put(fieldName, errorMessage);
+//        });
+        String result = "";
+        if (!ex.getConstraintViolations().isEmpty()) {
+            ConstraintViolation<?> firstError = ex.getConstraintViolations().iterator().next();
+
+            String fieldName = ((PathImpl) firstError.getPropertyPath()).getLeafNode().getName();
+            result = messageSource.getMessage(Objects.requireNonNull(firstError.getMessage()), new String[]{fieldName},
                     LocaleContextHolder.getLocale());
-            result.put(fieldName, errorMessage);
-        });
+        }
         return BaseResponse.error(HttpStatus.BAD_REQUEST, result);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
-        Map<String, String> result = new LinkedHashMap<>();
+        String result = "";
         String fieldName = ex.getParameterName();
-        String errorMessage = "Required request parameter " + fieldName + " is not present";
-        result.put(fieldName, errorMessage);
+//        String errorMessage = "Required request parameter " + fieldName + " is not present";
+        String errorMessage = "Tham số yêu cầu bắt buộc " + fieldName + " không tồn tại.";
+        result = errorMessage;
 
         return BaseResponse.error(HttpStatus.BAD_REQUEST, result);
     }
@@ -72,13 +83,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleValidException(BindException ex) {
-        Map<String, String> result = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = messageSource.getMessage(Objects.requireNonNull(error.getDefaultMessage()), null,
-                    LocaleContextHolder.getLocale());
-            result.put(fieldName, errorMessage);
-        });
+//        Map<String, String> result = new HashMap<>();
+//        ex.getBindingResult().getAllErrors().forEach((error) -> {
+//            String fieldName = ((FieldError) error).getField();
+//            String errorMessage = messageSource.getMessage(Objects.requireNonNull(error.getDefaultMessage()), null,
+//                    LocaleContextHolder.getLocale());
+//            result.put(fieldName, errorMessage);
+//        });
+
+        String result = "";
+        ObjectError error = ex.getBindingResult().getAllErrors().get(0);
+        String fieldName = ((FieldError) error).getField();
+        result = messageSource.getMessage(Objects.requireNonNull(error.getDefaultMessage()), new String[]{fieldName},
+                LocaleContextHolder.getLocale());
         return BaseResponse.error(HttpStatus.BAD_REQUEST, result);
     }
 
