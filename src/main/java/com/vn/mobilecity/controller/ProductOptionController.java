@@ -35,6 +35,16 @@ public class ProductOptionController {
     }
 
     @Tag(name = "product-option-controller")
+    @Operation(summary = "API search option by product")
+    @GetMapping(UrlConstant.ProductOption.SEARCH)
+    public ResponseEntity<?> searchProductOption(@RequestParam(name = "productId") Integer productId,
+                                                 @RequestParam(name = "ram", required = false, defaultValue = "-1") Integer ram,
+                                                 @RequestParam(name = "rom", required = false, defaultValue = "-1") Integer rom,
+                                                 @RequestParam(name = "color", required = false, defaultValue = "") String color) {
+        return BaseResponse.success(productOptionService.searchProductOption(productId, ram, rom, color));
+    }
+
+    @Tag(name = "product-option-controller")
     @Operation(summary = "API create option of product")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(UrlConstant.ProductOption.CREATE_OPTION)

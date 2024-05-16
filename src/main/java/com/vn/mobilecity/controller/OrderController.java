@@ -36,18 +36,18 @@ public class OrderController {
     @Operation(summary = "API get all order")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(UrlConstant.Order.GET_ALL)
-    public ResponseEntity<?> getAllOrder(@RequestParam(name = "status", required = false) Integer status,
-                                         @RequestParam(name = "type", required = false) Integer type) {
-        return BaseResponse.success(orderService.getAll(status, type));
+    public ResponseEntity<?> getAllOrder(@RequestParam(name = "statusId", required = false, defaultValue = "-1") Integer statusId,
+                                         @RequestParam(name = "paymentTypeId", required = false, defaultValue = "-1") Integer paymentTypeId) {
+        return BaseResponse.success(orderService.getAll(statusId, paymentTypeId));
     }
 
     @Tag(name = "order-controller")
     @Operation(summary = "API get order by user")
     @GetMapping(UrlConstant.Order.GET_ALL_BY_USER)
-    public ResponseEntity<?> getMyOrder(@RequestParam(name = "status", required = false) Integer status,
+    public ResponseEntity<?> getMyOrder(@RequestParam(name = "statusId", required = false, defaultValue = "-1") Integer statusId,
                                         @Parameter(name = "principal", hidden = true)
                                         @CurrentUser UserPrincipal user) {
-        return BaseResponse.success(orderService.getAllByUserId(user.getId(), status));
+        return BaseResponse.success(orderService.getAllByUserId(user.getId(), statusId));
     }
 
     @Tag(name = "order-controller")

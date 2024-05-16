@@ -11,6 +11,7 @@ public interface ProductOptionService {
     ProductOptionDto getById(Integer id);
 
     List<ProductOptionDto> getAllProductOption(Integer productId);
+    List<ProductOptionDto> searchProductOption(Integer productId, Integer ram, Integer rom, String color);
 
     ProductOptionDto create(ProductOptionCreateDto productOptionCreateDto);
 

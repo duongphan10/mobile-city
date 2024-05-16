@@ -9,9 +9,9 @@ import java.util.List;
 public interface ProductService {
     ProductDto getById(Integer id);
 
-    List<ProductDto> getAll(Integer categoryId);
+    List<ProductDto> getAll(Integer categoryId, Integer promotionId);
 
-    List<ProductDto> search(String key);
+    List<ProductDto> search(String key, Long priceFrom, Long priceTo);
 
     ProductDto create(ProductRequestDto productRequestDto);
 

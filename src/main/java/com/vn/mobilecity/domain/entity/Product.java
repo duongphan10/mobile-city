@@ -111,6 +111,8 @@ public class Product extends UserDateAuditing {
     private String description;
     @Column(nullable = false)
     private Long promotionValue;
+    @Column(nullable = false)
+    private Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY"))

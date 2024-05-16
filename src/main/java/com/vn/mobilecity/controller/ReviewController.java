@@ -34,7 +34,7 @@ public class ReviewController {
     @Operation(summary = "API get all review by product")
     @GetMapping(UrlConstant.Review.GET_ALL)
     public ResponseEntity<?> getReview(@RequestParam(name = "productId") Integer productId,
-                                       @RequestParam(name = "star", required = false) Integer star) {
+                                       @RequestParam(name = "star", required = false, defaultValue = "-1") Integer star) {
         return BaseResponse.success(reviewService.search(productId, star));
     }
 

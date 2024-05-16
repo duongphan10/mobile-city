@@ -41,6 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleConstraintViolationException(ConstraintViolationException ex) {
+        log.error(ex.getMessage());
 //        Map<String, String> result = new LinkedHashMap<>();
 //        ex.getConstraintViolations().forEach((error) -> {
 //            String fieldName = ((PathImpl) error.getPropertyPath()).getLeafNode().getName();
@@ -62,6 +63,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        log.error(ex.getMessage());
         String result = "";
         String fieldName = ex.getParameterName();
 //        String errorMessage = "Required request parameter " + fieldName + " is not present";
@@ -74,7 +76,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        //log.error(ex.getMessage(), ex);
+        log.error(ex.getMessage());
         String message = messageSource.getMessage(ErrorMessage.ERR_EXCEPTION_INVALID_JSON_REQUEST, null,
                 LocaleContextHolder.getLocale());
         return BaseResponse.error(HttpStatus.BAD_REQUEST, message);
@@ -83,6 +85,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleValidException(BindException ex) {
+        log.error(ex.getMessage());
 //        Map<String, String> result = new HashMap<>();
 //        ex.getBindingResult().getAllErrors().forEach((error) -> {
 //            String fieldName = ((FieldError) error).getField();
@@ -102,7 +105,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     //@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<RestData<?>> handlerInternalServerError(Exception ex) {
-        log.error(ex.getMessage(), ex);
+        log.error(ex.getMessage());
         String message = messageSource.getMessage(ErrorMessage.ERR_EXCEPTION_GENERAL, null, LocaleContextHolder.getLocale());
 
         if (ex instanceof DisabledException) {

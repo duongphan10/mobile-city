@@ -54,14 +54,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> getAllByUserId(Integer userId, Integer status) {
-        List<Order> orders = orderRepository.getAllByUserId(userId, status);
+    public List<OrderDto> getAllByUserId(Integer userId, Integer statusId) {
+        List<Order> orders = orderRepository.getAllByUserId(userId, statusId);
         return orderMapper.mapOrdersToOrderDtos(orders);
     }
 
     @Override
-    public List<OrderDto> getAll(Integer status, Integer type) {
-        List<Order> orders = orderRepository.getAll(status, type);
+    public List<OrderDto> getAll(Integer statusId, Integer paymentTypeId) {
+        List<Order> orders = orderRepository.getAll(statusId, paymentTypeId);
         return orderMapper.mapOrdersToOrderDtos(orders);
     }
 

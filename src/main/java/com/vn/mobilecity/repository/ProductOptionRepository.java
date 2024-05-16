@@ -12,4 +12,12 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, In
     @Query(value = "SELECT * FROM product_options " +
             "WHERE ?1 IS NULL OR product_id = ?1", nativeQuery = true)
     List<ProductOption> getAllByProductId(Integer productId);
+
+    @Query(value = "SELECT * FROM product_options po " +
+            "WHERE " +
+            "   po.product_id = ?1 " +
+            "   AND (?2 = -1 OR po.ram = ?2) " +
+            "   AND (?3 = -1 OR po.storage_capacity = ?3) " +
+            "   AND (?4 = '' OR po.color = ?4) ", nativeQuery = true)
+    List<ProductOption> search(Integer productId, Integer ram, Integer rom, String color);
 }

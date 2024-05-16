@@ -110,4 +110,6 @@ public class ProductRequestDto {
     private Integer promotionId;
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Long promotionValue;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private Boolean status;
 }

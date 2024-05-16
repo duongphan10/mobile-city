@@ -45,6 +45,14 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     }
 
     @Override
+    public List<ProductOptionDto> searchProductOption(Integer productId, Integer ram, Integer rom, String color) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, new String[]{productId.toString()}));
+        List<ProductOption> productOptions = productOptionRepository.search(productId, ram, rom, color);
+        return productOptionMapper.mapProductOptionsToProductOptionDtos(productOptions);
+    }
+
+    @Override
     public ProductOptionDto create(ProductOptionCreateDto productOptionCreateDto) {
         Product product = productRepository.findById(productOptionCreateDto.getProductId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, new String[]{productOptionCreateDto.getProductId().toString()}));

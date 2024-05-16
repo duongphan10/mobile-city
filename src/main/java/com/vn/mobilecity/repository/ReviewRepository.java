@@ -15,7 +15,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
             "LEFT JOIN product_options po ON od.product_option_id = po.id " +
             "WHERE " +
             "   po.product_id = ?1 " +
-            "   AND (?2 IS NULL OR r.star = ?2) ", nativeQuery = true)
+            "   AND (?2 = -1 OR r.star = ?2) ", nativeQuery = true)
     List<Review> search(Integer productId, Integer star);
 
 }

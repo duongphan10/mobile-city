@@ -29,15 +29,18 @@ public class ProductController {
     @Tag(name = "product-controller")
     @Operation(summary = "API get all product")
     @GetMapping(UrlConstant.Product.GET_ALL)
-    public ResponseEntity<?> getAllProduct(@RequestParam(name = "categoryId", required = false) Integer categoryId) {
-        return BaseResponse.success(productService.getAll(categoryId));
+    public ResponseEntity<?> getAllProduct(@RequestParam(name = "categoryId", required = false) Integer categoryId,
+                                           @RequestParam(name = "promotionId", required = false) Integer promotionId) {
+        return BaseResponse.success(productService.getAll(categoryId, promotionId));
     }
 
     @Tag(name = "product-controller")
     @Operation(summary = "API search product")
     @GetMapping(UrlConstant.Product.SEARCH)
-    public ResponseEntity<?> searchProduct(@RequestParam(name = "key", required = false) String key) {
-        return BaseResponse.success(productService.search(key));
+    public ResponseEntity<?> searchProduct(@RequestParam(name = "key", required = false, defaultValue = "") String key,
+                                           @RequestParam(name = "priceFrom", required = false) Long priceFrom,
+                                           @RequestParam(name = "priceTo", required = false) Long priceTo) {
+        return BaseResponse.success(productService.search(key, priceFrom, priceTo));
     }
 
     @Tag(name = "product-controller")

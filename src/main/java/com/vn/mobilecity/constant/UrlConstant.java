@@ -85,6 +85,7 @@ public class UrlConstant {
         private static final String PRE_FIX = "/product-option";
         public static final String GET_OPTION_BY_ID = PRE_FIX + "/{id}";
         public static final String GET_ALL_OPTION = PRE_FIX + "/all";
+        public static final String SEARCH = PRE_FIX + "/search";
         public static final String CREATE_OPTION = PRE_FIX;
         public static final String UPDATE_OPTION = PRE_FIX + "/{id}";
         public static final String DELETE_OPTION = PRE_FIX + "/{id}";

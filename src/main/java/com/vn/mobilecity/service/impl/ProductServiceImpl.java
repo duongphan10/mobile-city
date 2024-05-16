@@ -38,18 +38,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getAll(Integer categoryId) {
+    public List<ProductDto> getAll(Integer categoryId, Integer promotionId) {
         if (categoryId != null) {
             categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, new String[]{categoryId.toString()}));
         }
-        List<Product> products = productRepository.getAll(categoryId);
+        if (promotionId != null) {
+            promotionRepository.findById(promotionId)
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Promotion.ERR_NOT_FOUND_ID, new String[]{promotionId.toString()}));
+        }
+        List<Product> products = productRepository.getAll(categoryId, promotionId);
         return productMapper.mapProductsToProductDtos(products);
     }
 
     @Override
-    public List<ProductDto> search(String key) {
-        List<Product> products = productRepository.search(key);
+    public List<ProductDto> search(String key, Long priceFrom, Long priceTo) {
+        if (priceFrom == null) {
+            priceFrom = 0L;
+        }
+        if (priceTo == null) {
+            priceTo = Long.MAX_VALUE;
+        }
+        List<Product> products = productRepository.search(key, priceFrom, priceTo);
         return productMapper.mapProductsToProductDtos(products);
     }
 

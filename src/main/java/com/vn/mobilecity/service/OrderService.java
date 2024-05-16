@@ -10,9 +10,9 @@ public interface OrderService {
 
     OrderDto getById(Integer id, Integer userId);
 
-    List<OrderDto> getAllByUserId(Integer userId, Integer status);
+    List<OrderDto> getAllByUserId(Integer userId, Integer statusId);
 
-    List<OrderDto> getAll(Integer status, Integer type);
+    List<OrderDto> getAll(Integer statusId, Integer paymentTypeId);
 
     OrderDto create(Integer userId, OrderCreateDto orderCreateDto);
 
