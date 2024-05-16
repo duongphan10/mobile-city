@@ -40,6 +40,8 @@ public class OrderServiceImpl implements OrderService {
     private final AsyncService asyncService;
     private final NotificationConfig notificationConfig;
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonConstant.PATTERN_DATE_TIME_COMMON);
+
     @Override
     public OrderDto getById(Integer id, Integer userId) {
         User user = userService.getById(userId);
@@ -92,7 +94,8 @@ public class OrderServiceImpl implements OrderService {
         order.setAddress(address.getAddress());
         order.setOriginalPrice(originalPrice);
         order.setTotalPrice(totalPrice);
-        order.setOrderStatus(orderStatusRepository.getById(OrderStatusConstant.WAITING.getId()));
+        OrderStatus orderStatus = orderStatusRepository.getById(OrderStatusConstant.WAITING.getId());
+        order.setOrderStatus(orderStatus);
         order.setPaymentType(paymentType);
         order.setPaymentStatus(orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.MOMO.getId())
                 || orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.VNPAY.getId()));
@@ -103,6 +106,16 @@ public class OrderServiceImpl implements OrderService {
             orderDetails.add(orderDetailService.create(order, requestDto));
         }
         order.setOrderDetails(orderDetails);
+
+        String message =
+                "Mã đơn hàng: " + order.getId() +
+                "\nTrạng thái mới: " + orderStatus.getName() +
+                "\nTrạng thái cũ: " +
+                "\nThanh toán: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
+                "\nNgười đặt: " + order.getUser().getPhone() + " - " + order.getUser().getEmail() + " - " + order.getUser().getUsername() +
+                "\nNgày đặt: " + order.getCreatedDate().format(formatter) +
+                "\nNgười cập nhật: " + user.getUsername();
+        asyncService.sendTelegramMessage(notificationConfig.ORDER, message);
 
         return orderMapper.mapOrderToOrderDto(order);
     }
@@ -130,7 +143,6 @@ public class OrderServiceImpl implements OrderService {
         // send message telegram
         if (!oldStatus.getId().equals(orderStatus.getId())) {
             User user = userService.getById(userId);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonConstant.PATTERN_DATE_TIME_COMMON);
             String message =
                     "Mã đơn hàng: " + order.getId() +
                     "\nTrạng thái mới: " + orderStatus.getName() +

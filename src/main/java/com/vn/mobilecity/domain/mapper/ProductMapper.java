@@ -21,6 +21,7 @@ public interface ProductMapper {
             @Mapping(target = "categoryName", source = "category.name"),
             @Mapping(target = "promotionId", source = "promotion.id"),
             @Mapping(target = "promotionName", source = "promotion.name"),
+            @Mapping(target = "productOptionDtos", source = "productOptions"),
     })
     ProductDto mapProductToProductDto(Product product);
 
