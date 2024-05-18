@@ -29,16 +29,17 @@ public class NewsController {
     @Tag(name = "news-controller")
     @Operation(summary = "API get all news")
     @GetMapping(UrlConstant.News.GET_BY_USER)
-    public ResponseEntity<?> getByUser() {
-        return BaseResponse.success(newsService.getByUser());
+    public ResponseEntity<?> getByUser(@RequestParam(required = false, defaultValue = "-1") Integer newsTypeId) {
+        return BaseResponse.success(newsService.getByUser(newsTypeId));
     }
 
     @Tag(name = "news-controller")
     @Operation(summary = "API get news by status")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(UrlConstant.News.GET_ALL)
-    public ResponseEntity<?> getAllNews(@RequestParam(required = false) Boolean status) {
-        return BaseResponse.success(newsService.getAll(status));
+    public ResponseEntity<?> getAllNews(@RequestParam(required = false, defaultValue = "-1") Integer newsTypeId,
+                                        @RequestParam(required = false) Boolean status) {
+        return BaseResponse.success(newsService.getAll(newsTypeId, status));
     }
 
     @Tag(name = "news-controller")

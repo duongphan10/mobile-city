@@ -56,6 +56,9 @@ public class AddressServiceImpl implements AddressService {
         User user = userService.getById(userId);
         Address address = addressMapper.mapAddressRequestDtoToAddress(addressRequestDto);
         address.setUser(user);
+        if (addressRepository.count() == 0) {
+            address.setAddressDefault(true);
+        }
         addressRepository.save(address);
         if (address.getAddressDefault()) {
             addressRepository.removeOtherDefault(address.getId(), userId);

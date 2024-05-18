@@ -23,14 +23,17 @@ public class News extends UserDateAuditing {
     @Column(nullable = false)
     private String avatar;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
     private Boolean status;
+
+    @Column(nullable = false)
+    private Long view;
 
     @ManyToOne
     @JoinColumn(name = "news_type_id", foreignKey = @ForeignKey(name = "FK_NEWS_NEWS_TYPE"))

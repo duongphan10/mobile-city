@@ -17,6 +17,7 @@ public class NewsDto extends UserDateAuditingDto {
     private String summary;
     private String content;
     private Boolean status;
+    private Long view;
     private String newsTypeId;
     private String newsTypeName;
 }

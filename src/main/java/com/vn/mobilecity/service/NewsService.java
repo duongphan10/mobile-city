@@ -9,9 +9,9 @@ import java.util.List;
 public interface NewsService {
     NewsDto getById(Integer id);
 
-    List<NewsDto> getAll(Boolean status);
+    List<NewsDto> getAll(Integer newsTypeId, Boolean status);
 
-    List<NewsDto> getByUser();
+    List<NewsDto> getByUser(Integer newsTypeId);
 
     NewsDto create(NewsRequestDto createDto);
 

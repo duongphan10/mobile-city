@@ -30,18 +30,30 @@ public class NewsServiceImpl implements NewsService {
     public NewsDto getById(Integer id) {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.News.ERR_NOT_FOUND_ID, new String[]{id.toString()}));
+        news.setView(news.getView() + 1);
+        newsRepository.save(news);
         return newsMapper.mapNewsToNewsDto(news);
     }
 
     @Override
-    public List<NewsDto> getByUser() {
-        List<News> newsList = newsRepository.getByUser();
+    public List<NewsDto> getByUser(Integer newsTypeId) {
+        if (newsTypeId > 0) {
+            newsTypeRepository.findById(newsTypeId)
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.NewsType.ERR_NOT_FOUND_ID,
+                            new String[]{newsTypeId.toString()}));
+        }
+        List<News> newsList = newsRepository.getByUser(newsTypeId);
         return newsMapper.mapNewsToNewsDto(newsList);
     }
 
     @Override
-    public List<NewsDto> getAll(Boolean status) {
-        List<News> newsList = newsRepository.getAll(status);
+    public List<NewsDto> getAll(Integer newsTypeId, Boolean status) {
+        if (newsTypeId > 0) {
+            newsTypeRepository.findById(newsTypeId)
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.NewsType.ERR_NOT_FOUND_ID,
+                            new String[]{newsTypeId.toString()}));
+        }
+        List<News> newsList = newsRepository.getAll(newsTypeId, status);
         return newsMapper.mapNewsToNewsDto(newsList);
     }
 
@@ -53,6 +65,7 @@ public class NewsServiceImpl implements NewsService {
 
         News news = newsMapper.mapNewsCreateDtoToNews(createDto);
         news.setAvatar(uploadFileUtil.uploadImage(createDto.getAvatar()));
+        news.setView(0L);
         news.setNewsType(newsType);
         return newsMapper.mapNewsToNewsDto(newsRepository.save(news));
     }
