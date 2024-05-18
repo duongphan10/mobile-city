@@ -9,14 +9,14 @@ import java.util.List;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Integer> {
-    @Query(value = "SELECT news.* FROM news n " +
+    @Query(value = "SELECT n.* FROM news n " +
             "WHERE " +
             "   (?1 = -1 OR n.news_type_id = ?1) " +
             "   AND (?2 IS NULL OR n.status = ?2) " +
             "ORDER BY n.created_date DESC ", nativeQuery = true)
     List<News> getAll(Integer newsTypeId, Boolean status);
 
-    @Query(value = "SELECT * FROM news n " +
+    @Query(value = "SELECT n.* FROM news n " +
             "WHERE " +
             "   n.status = true " +
             "   AND (?1 = -1 OR n.news_type_id = ?1) " +
