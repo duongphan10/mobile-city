@@ -1,7 +1,5 @@
 package com.vn.mobilecity.service;
 
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
 import com.vn.mobilecity.domain.dto.request.ChangePasswordRequestDto;
 import com.vn.mobilecity.domain.dto.request.NewPasswordRequestDto;
 import com.vn.mobilecity.domain.dto.request.UserCreateDto;

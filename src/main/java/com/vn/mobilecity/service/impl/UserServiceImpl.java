@@ -1,9 +1,8 @@
 package com.vn.mobilecity.service.impl;
 
-import com.vn.mobilecity.constant.*;
-import com.vn.mobilecity.domain.dto.pagination.PaginationFullRequestDto;
-import com.vn.mobilecity.domain.dto.pagination.PaginationResponseDto;
-import com.vn.mobilecity.domain.dto.pagination.PagingMeta;
+import com.vn.mobilecity.constant.ErrorMessage;
+import com.vn.mobilecity.constant.MessageConstant;
+import com.vn.mobilecity.constant.RoleConstant;
 import com.vn.mobilecity.domain.dto.request.ChangePasswordRequestDto;
 import com.vn.mobilecity.domain.dto.request.NewPasswordRequestDto;
 import com.vn.mobilecity.domain.dto.request.UserCreateDto;
@@ -18,11 +17,8 @@ import com.vn.mobilecity.exception.NotFoundException;
 import com.vn.mobilecity.repository.RoleRepository;
 import com.vn.mobilecity.repository.UserRepository;
 import com.vn.mobilecity.service.UserService;
-import com.vn.mobilecity.util.PaginationUtil;
 import com.vn.mobilecity.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
