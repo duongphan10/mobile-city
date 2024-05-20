@@ -77,23 +77,24 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.PaymentType.ERR_NOT_FOUND_ID, new String[]{orderCreateDto.getPaymentTypeId().toString()}));
 
 
-        long originalPrice = 0L;
+        long originalPrice = 0L, netPriceTotal = 0L;
         for (OrderProductRequestDto requestDto : orderCreateDto.getOrderProductRequestDtos()) {
             ProductOption productOption = productOptionRepository.findById(requestDto.getProductOptionId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.ProductOption.ERR_NOT_FOUND_ID, new String[]{requestDto.getProductOptionId().toString()}));
-            if (!productOption.getStatus() || productOption.getQuantity() < requestDto.getQuantity()) {
+            if (!productOption.getProduct().getStatus() || !productOption.getStatus() || productOption.getQuantity() < requestDto.getQuantity()) {
                 throw new InvalidException(ErrorMessage.Order.ERR_INVALID_PRODUCT_OPTION);
             }
             originalPrice += requestDto.getQuantity() * productOption.getPrice();
+            netPriceTotal += requestDto.getQuantity() * productOption.getNewPrice();
         }
-        long totalPrice = originalPrice + orderCreateDto.getShippingFee();
+        netPriceTotal += orderCreateDto.getShippingFee();
         Order order = orderMapper.mapOrderCreateDtoToOrder(orderCreateDto);
         order.setUser(user);
         order.setCustomerName(address.getCustomerName());
         order.setPhone(address.getPhone());
         order.setAddress(address.getAddress());
         order.setOriginalPrice(originalPrice);
-        order.setTotalPrice(totalPrice);
+        order.setNetPriceTotal(netPriceTotal);
         OrderStatus orderStatus = orderStatusRepository.getById(OrderStatusConstant.WAITING.getId());
         order.setOrderStatus(orderStatus);
         order.setPaymentType(paymentType);
@@ -109,12 +110,10 @@ public class OrderServiceImpl implements OrderService {
 
         String message =
                 "Mã đơn hàng: " + order.getId() +
-                "\nTrạng thái mới: " + orderStatus.getName() +
-                "\nTrạng thái cũ: " +
+                "\nTrạng thái: " + orderStatus.getName() +
                 "\nThanh toán: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
-                "\nNgười đặt: " + order.getUser().getPhone() + " - " + order.getUser().getEmail() + " - " + order.getUser().getUsername() +
-                "\nNgày đặt: " + order.getCreatedDate().format(formatter) +
-                "\nNgười cập nhật: " + user.getUsername();
+                "\nNgười đặt: " + order.getUser().getUsername() + " (" + order.getUser().getPhone() + " - " + order.getUser().getEmail() + ")" +
+                "\nNgày đặt: " + order.getCreatedDate().format(formatter);
         asyncService.sendTelegramMessage(notificationConfig.ORDER, message);
 
         return orderMapper.mapOrderToOrderDto(order);
@@ -148,10 +147,10 @@ public class OrderServiceImpl implements OrderService {
                     "\nTrạng thái mới: " + orderStatus.getName() +
                     "\nTrạng thái cũ: " + oldStatus.getName() +
                     "\nThanh toán: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
-                    "\nNgười đặt: " + order.getUser().getPhone() + " - " + order.getUser().getEmail() + " - " + order.getUser().getUsername() +
+                    "\nNgười đặt: " + order.getUser().getUsername() + " (" + order.getUser().getPhone() + " - " + order.getUser().getEmail() + ")" +
                     "\nNgày đặt: " + order.getCreatedDate().format(formatter) +
                     "\nNgười cập nhật: " + user.getUsername();
-            asyncService.sendTelegramMessage(notificationConfig.ORDER, message);
+            asyncService.sendTelegramMessage(notificationConfig.STATUS, message);
         }
 
         return orderMapper.mapOrderToOrderDto(order);

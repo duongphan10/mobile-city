@@ -18,5 +18,6 @@ public class OrderDetailDto extends UserDateAuditingDto {
     private ProductOptionDto productOptionDto;
     private Integer quantity;
     private Long price;
+    private Long netPrice;
 
 }

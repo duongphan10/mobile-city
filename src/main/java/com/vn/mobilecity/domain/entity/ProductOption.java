@@ -28,6 +28,8 @@ public class ProductOption extends UserDateAuditing {
     @Column(nullable = false)
     private Long price;
     @Column(nullable = false)
+    private Long newPrice;
+    @Column(nullable = false)
     private Integer quantity;
     @Column(nullable = false)
     private Boolean status;

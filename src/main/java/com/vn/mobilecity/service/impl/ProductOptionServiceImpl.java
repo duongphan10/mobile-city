@@ -2,12 +2,14 @@ package com.vn.mobilecity.service.impl;
 
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
+import com.vn.mobilecity.constant.PromotionConstant;
 import com.vn.mobilecity.domain.dto.request.ProductOptionCreateDto;
 import com.vn.mobilecity.domain.dto.request.ProductOptionUpdateDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.ProductOptionDto;
 import com.vn.mobilecity.domain.entity.Product;
 import com.vn.mobilecity.domain.entity.ProductOption;
+import com.vn.mobilecity.domain.entity.Promotion;
 import com.vn.mobilecity.domain.mapper.ProductOptionMapper;
 import com.vn.mobilecity.exception.NotFoundException;
 import com.vn.mobilecity.repository.ProductOptionRepository;
@@ -60,8 +62,38 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         ProductOption productOption = productOptionMapper.mapProductOptionCreateDtoToProductOption(productOptionCreateDto);
         productOption.setImage(uploadFileUtil.uploadImage(productOptionCreateDto.getImage()));
         productOption.setProduct(product);
+        productOption.setNewPrice(calNewPrice(productOption, product));
         productOptionRepository.save(productOption);
         return productOptionMapper.mapProductOptionToProductOptionDto(productOption);
+    }
+
+    public void calNewPriceOfProductOption(Product product, List<ProductOption> productOptions) {
+        for (ProductOption productOption : productOptions) {
+            if (productOption == null) {
+                continue;
+            }
+            productOption.setNewPrice(calNewPrice(productOption, product));
+            productOptionRepository.save(productOption);
+        }
+    }
+
+
+    public Long calNewPrice(ProductOption productOption, Product product) {
+        Promotion promotion = product.getPromotion();
+        Long value = product.getPromotionValue(), newPrice = 0L;
+        if (promotion.getId().equals(PromotionConstant.NONE.getId())) {
+            newPrice = productOption.getPrice();
+        } else if (promotion.getId().equals(PromotionConstant.GIAM_GIA.getId())
+                || promotion.getId().equals(PromotionConstant.GIA_RE_ONLINE.getId())) {
+            if (value < 100) {
+                newPrice = (long) (productOption.getPrice() * ((100 - value) * 1.0 / 100));
+            } else {
+                newPrice = productOption.getPrice() - value;
+            }
+        } else if (promotion.getId().equals(PromotionConstant.TRA_GOP.getId())) {
+            newPrice = productOption.getPrice();
+        }
+        return newPrice;
     }
 
     @Override
@@ -74,6 +106,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
             uploadFileUtil.destroyImageWithUrl(productOption.getImage());
             productOption.setImage(uploadFileUtil.uploadImage(productOptionUpdateDto.getImage()));
         }
+        productOption.setNewPrice(calNewPrice(productOption, productOption.getProduct()));
         productOptionRepository.save(productOption);
         return productOptionMapper.mapProductOptionToProductOptionDto(productOption);
     }

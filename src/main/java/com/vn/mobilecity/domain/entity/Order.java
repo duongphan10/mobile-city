@@ -33,7 +33,7 @@ public class Order extends UserDateAuditing {
     @Column(nullable = false)
     private Long originalPrice;
     @Column(nullable = false)
-    private Long totalPrice;
+    private Long netPriceTotal;
     @Column(nullable = false)
     private Boolean paymentStatus;
 

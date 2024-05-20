@@ -19,6 +19,7 @@ public class ProductOptionDto extends UserDateAuditingDto {
     private String color;
     private String image;
     private Long price;
+    private Long newPrice;
     private Integer quantity;
     private Boolean status;
 

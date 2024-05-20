@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 public class NotificationConfig {
     @Value("${notification.order.id}")
     public int ORDER;
+    @Value("${notification.status.id}")
+    public int STATUS;
     @Value("${notification.review.id}")
     public int REVIEW;
 }

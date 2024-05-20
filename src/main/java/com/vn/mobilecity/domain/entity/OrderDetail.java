@@ -20,6 +20,8 @@ public class OrderDetail extends UserDateAuditing {
     private Integer quantity;
     @Column(nullable = false)
     private Long price;
+    @Column(nullable = false)
+    private Long netPrice;
 
     @ManyToOne
     @JoinColumn(name = "order_id", foreignKey = @ForeignKey(name = "FK_DETAIL_ORDER"))

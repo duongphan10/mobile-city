@@ -1,5 +1,7 @@
 package com.vn.mobilecity.service.impl;
 
+import com.vn.mobilecity.config.NotificationConfig;
+import com.vn.mobilecity.constant.CommonConstant;
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
 import com.vn.mobilecity.constant.OrderStatusConstant;
@@ -14,6 +16,7 @@ import com.vn.mobilecity.domain.mapper.ReviewMapper;
 import com.vn.mobilecity.exception.AlreadyExistException;
 import com.vn.mobilecity.exception.ForbiddenException;
 import com.vn.mobilecity.exception.NotFoundException;
+import com.vn.mobilecity.proactive.alert.AsyncService;
 import com.vn.mobilecity.repository.*;
 import com.vn.mobilecity.service.ReviewFileService;
 import com.vn.mobilecity.service.ReviewService;
@@ -21,6 +24,7 @@ import com.vn.mobilecity.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +38,12 @@ public class ReviewServiceImpl implements ReviewService {
     private final OrderDetailRepository orderDetailRepository;
     private final ReviewFileRepository reviewFileRepository;
     private final ReviewFileService reviewFileService;
+    private final AsyncService asyncService;
     private final ReviewMapper reviewMapper;
     private final UploadFileUtil uploadFileUtil;
+    private final NotificationConfig notificationConfig;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonConstant.PATTERN_DATE_TIME_COMMON);
 
     @Override
     public ReviewDto getById(Integer id) {
@@ -90,7 +98,17 @@ public class ReviewServiceImpl implements ReviewService {
             reviewFiles = reviewFileService.create(review.getId(), reviewCreateDto.getFiles());
         }
         review.setFiles(reviewFiles);
-        return reviewMapper.mapReviewToReviewDto(reviewRepository.save(review));
+        reviewRepository.save(review);
+
+        String message =
+                "Mã sản phẩm: " + orderDetail.getProductOption().getProduct().getId() +
+                "\nStar: " + review.getStar() +
+                "\nDescription: " + review.getDescription() +
+                "\nReviewer: " + orderDetail.getOrder().getUser().getUsername() + " (" + orderDetail.getOrder().getUser().getPhone() + ")" +
+                "\nThời gian: " + review.getCreatedDate().format(formatter);
+        asyncService.sendTelegramMessage(notificationConfig.REVIEW, message);
+
+        return reviewMapper.mapReviewToReviewDto(review);
     }
 
     @Override

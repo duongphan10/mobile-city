@@ -2,6 +2,7 @@ package com.vn.mobilecity.service.impl;
 
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
+import com.vn.mobilecity.constant.PromotionConstant;
 import com.vn.mobilecity.domain.dto.request.ProductRequestDto;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.ProductDto;
@@ -27,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final PromotionRepository promotionRepository;
+    private final ProductOptionServiceImpl productOptionService;
     private final ProductMapper productMapper;
     private final UploadFileUtil uploadFileUtil;
 
@@ -93,7 +95,9 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setCategory(category);
         product.setPromotion(promotion);
-        return productMapper.mapProductToProductDto(productRepository.save(product));
+        productRepository.save(product);
+        productOptionService.calNewPriceOfProductOption(product, product.getProductOptions());
+        return productMapper.mapProductToProductDto(product);
     }
 
     @Override

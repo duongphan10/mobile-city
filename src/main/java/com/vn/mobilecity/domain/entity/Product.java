@@ -107,7 +107,7 @@ public class Product extends UserDateAuditing {
     private String size;
     @Column(nullable = false)
     private String launchDate;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
     @Column(nullable = false)
     private Long promotionValue;
