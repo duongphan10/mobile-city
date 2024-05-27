@@ -65,11 +65,10 @@ public class UserController {
     @Tag(name = "user-controller")
     @Operation(summary = "API update user by admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping(UrlConstant.User.UPDATE_BY_ADMIN)
-    public ResponseEntity<?> updateByAdmin(@Parameter(name = "principal", hidden = true)
-                                             @CurrentUser UserPrincipal user,
-                                             @Valid @RequestBody UserUpdateByAdminDto userUpdateDto) {
-        return BaseResponse.success(userService.updateByAdmin(user.getId(), userUpdateDto));
+    @PatchMapping(UrlConstant.User.UPDATE_BY_ID)
+    public ResponseEntity<?> updateByAdmin(@PathVariable Integer id,
+                                           @Valid @RequestBody UserUpdateByAdminDto userUpdateDto) {
+        return BaseResponse.success(userService.updateByAdmin(id, userUpdateDto));
     }
 
     @Tag(name = "user-controller")
