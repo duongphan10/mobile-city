@@ -19,5 +19,6 @@ public class UserUpdateByAdminDto {
     private Boolean accountNonLocked;
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Boolean enabled;
-
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private String roleName;
 }

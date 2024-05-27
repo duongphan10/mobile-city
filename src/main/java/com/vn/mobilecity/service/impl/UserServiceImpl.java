@@ -6,6 +6,7 @@ import com.vn.mobilecity.constant.RoleConstant;
 import com.vn.mobilecity.domain.dto.request.*;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.UserDto;
+import com.vn.mobilecity.domain.entity.Role;
 import com.vn.mobilecity.domain.entity.User;
 import com.vn.mobilecity.domain.mapper.UserMapper;
 import com.vn.mobilecity.exception.AlreadyExistException;
@@ -101,6 +102,8 @@ public class UserServiceImpl implements UserService {
     public UserDto updateByAdmin(Integer id, UserUpdateByAdminDto updateByAdminDto) {
         User user = this.getById(id);
         userMapper.updateUserByAdmin(user, updateByAdminDto);
+        Role role = roleRepository.findByName(updateByAdminDto.getRoleName());
+        user.setRole(role);
         return userMapper.mapUserToUserDto(userRepository.save(user));
     }
 
