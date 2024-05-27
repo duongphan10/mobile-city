@@ -3,10 +3,7 @@ package com.vn.mobilecity.controller;
 import com.vn.mobilecity.base.BaseResponse;
 import com.vn.mobilecity.base.RestApiV1;
 import com.vn.mobilecity.constant.UrlConstant;
-import com.vn.mobilecity.domain.dto.request.ChangePasswordRequestDto;
-import com.vn.mobilecity.domain.dto.request.NewPasswordRequestDto;
-import com.vn.mobilecity.domain.dto.request.UserCreateDto;
-import com.vn.mobilecity.domain.dto.request.UserUpdateDto;
+import com.vn.mobilecity.domain.dto.request.*;
 import com.vn.mobilecity.security.CurrentUser;
 import com.vn.mobilecity.security.UserPrincipal;
 import com.vn.mobilecity.service.UserService;
@@ -63,6 +60,16 @@ public class UserController {
                                              @CurrentUser UserPrincipal user,
                                              @Valid @ModelAttribute UserUpdateDto userUpdateDto) {
         return BaseResponse.success(userService.update(user.getId(), userUpdateDto));
+    }
+
+    @Tag(name = "user-controller")
+    @Operation(summary = "API update user by admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PatchMapping(UrlConstant.User.UPDATE_BY_ADMIN)
+    public ResponseEntity<?> updateByAdmin(@Parameter(name = "principal", hidden = true)
+                                             @CurrentUser UserPrincipal user,
+                                             @Valid @RequestBody UserUpdateByAdminDto userUpdateDto) {
+        return BaseResponse.success(userService.updateByAdmin(user.getId(), userUpdateDto));
     }
 
     @Tag(name = "user-controller")

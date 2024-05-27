@@ -17,6 +17,7 @@ public class UrlConstant {
         public static final String GET_ALL = PRE_FIX + "/all";
         public static final String CREATE = PRE_FIX;
         public static final String UPDATE = PRE_FIX;
+        public static final String UPDATE_BY_ADMIN = PRE_FIX +"/admin/update/{id}";
         public static final String CHANGE_PASSWORD = PRE_FIX + "/change-password";
         public static final String CREATE_NEW_PASSWORD = PRE_FIX + "/new-password";
         public static final String DELETE = PRE_FIX;

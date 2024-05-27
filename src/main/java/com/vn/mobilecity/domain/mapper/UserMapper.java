@@ -2,6 +2,7 @@ package com.vn.mobilecity.domain.mapper;
 
 import com.vn.mobilecity.constant.CommonConstant;
 import com.vn.mobilecity.domain.dto.request.UserCreateDto;
+import com.vn.mobilecity.domain.dto.request.UserUpdateByAdminDto;
 import com.vn.mobilecity.domain.dto.request.UserUpdateDto;
 import com.vn.mobilecity.domain.dto.response.UserDto;
 import com.vn.mobilecity.domain.entity.User;
@@ -26,4 +27,11 @@ public interface UserMapper {
             @Mapping(target = "avatar", source = "avatar", ignore = true)
     })
     void updateUser(@MappingTarget User user, UserUpdateDto userUpdateDto);
+
+    @Mappings({
+            @Mapping(target = "accountNonExpired", source = "accountNonExpired"),
+            @Mapping(target = "accountNonLocked", source = "accountNonLocked"),
+            @Mapping(target = "enabled", source = "enabled"),
+    })
+    void updateUserByAdmin(@MappingTarget User user, UserUpdateByAdminDto userUpdateDto);
 }

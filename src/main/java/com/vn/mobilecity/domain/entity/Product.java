@@ -122,7 +122,7 @@ public class Product extends UserDateAuditing {
     @JoinColumn(name = "promotion_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_PROMOTION"))
     private Promotion promotion;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<ProductOption> productOptions;
 
 }

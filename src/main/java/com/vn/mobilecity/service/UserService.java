@@ -1,9 +1,6 @@
 package com.vn.mobilecity.service;
 
-import com.vn.mobilecity.domain.dto.request.ChangePasswordRequestDto;
-import com.vn.mobilecity.domain.dto.request.NewPasswordRequestDto;
-import com.vn.mobilecity.domain.dto.request.UserCreateDto;
-import com.vn.mobilecity.domain.dto.request.UserUpdateDto;
+import com.vn.mobilecity.domain.dto.request.*;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.UserDto;
 import com.vn.mobilecity.domain.entity.User;
@@ -22,6 +19,8 @@ public interface UserService {
     UserDto create(UserCreateDto userCreateDto);
 
     UserDto update(Integer id, UserUpdateDto userUpdateDto);
+
+    UserDto updateByAdmin(Integer id, UserUpdateByAdminDto updateByAdminDto);
 
     CommonResponseDto changePassword(Integer id, ChangePasswordRequestDto changePasswordRequestDto);
 

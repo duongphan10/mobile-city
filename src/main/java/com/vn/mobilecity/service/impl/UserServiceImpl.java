@@ -3,10 +3,7 @@ package com.vn.mobilecity.service.impl;
 import com.vn.mobilecity.constant.ErrorMessage;
 import com.vn.mobilecity.constant.MessageConstant;
 import com.vn.mobilecity.constant.RoleConstant;
-import com.vn.mobilecity.domain.dto.request.ChangePasswordRequestDto;
-import com.vn.mobilecity.domain.dto.request.NewPasswordRequestDto;
-import com.vn.mobilecity.domain.dto.request.UserCreateDto;
-import com.vn.mobilecity.domain.dto.request.UserUpdateDto;
+import com.vn.mobilecity.domain.dto.request.*;
 import com.vn.mobilecity.domain.dto.response.CommonResponseDto;
 import com.vn.mobilecity.domain.dto.response.UserDto;
 import com.vn.mobilecity.domain.entity.User;
@@ -97,6 +94,13 @@ public class UserServiceImpl implements UserService {
             }
             user.setAvatar(uploadFileUtil.uploadImage(userUpdateDto.getAvatar()));
         }
+        return userMapper.mapUserToUserDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto updateByAdmin(Integer id, UserUpdateByAdminDto updateByAdminDto) {
+        User user = this.getById(id);
+        userMapper.updateUserByAdmin(user, updateByAdminDto);
         return userMapper.mapUserToUserDto(userRepository.save(user));
     }
 
