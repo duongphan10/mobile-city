@@ -64,7 +64,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         orderDetail.setProductOption(productOption);
         orderDetail.setQuantity(orderProductRequestDto.getQuantity());
         orderDetail.setPrice(productOption.getPrice());
-        orderDetail.setPrice(productOption.getNewPrice());
+        orderDetail.setNetPrice(productOption.getNewPrice());
         return orderDetailRepository.save(orderDetail);
     }
 
