@@ -33,6 +33,7 @@ public class CommonConstant {
     public static final Long MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
     public static final Long MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024;
     public static final Integer VERIFICATION_C0DE_LENGTH = 6;
+    public static final Integer ORDER_C0DE_LENGTH = 7;
     public static final Integer VERIFICATION_CODE_EXPIRATION_MINUTES = 10;
     public static final Integer NUM_OF_USER_PER_PAGE = 5;
     public static final Integer NUM_OF_PRODUCT_PER_PAGE = 20;

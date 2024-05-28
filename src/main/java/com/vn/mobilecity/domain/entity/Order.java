@@ -18,6 +18,8 @@ public class Order extends UserDateAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = true, unique = true)
+    private String orderCode;
     @Nationalized
     @Column(nullable = false)
     private String customerName;

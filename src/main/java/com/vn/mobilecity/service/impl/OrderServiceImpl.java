@@ -16,6 +16,7 @@ import com.vn.mobilecity.repository.*;
 import com.vn.mobilecity.service.OrderDetailService;
 import com.vn.mobilecity.service.OrderService;
 import com.vn.mobilecity.service.UserService;
+import com.vn.mobilecity.util.CodeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -101,6 +102,8 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentStatus(orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.MOMO.getId())
                 || orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.VNPAY.getId()));
         orderRepository.save(order);
+        order.setOrderCode(CodeUtil.generateCodeOrder(order.getId(), CommonConstant.ORDER_C0DE_LENGTH));
+        orderRepository.save(order);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (OrderProductRequestDto requestDto : orderCreateDto.getOrderProductRequestDtos()) {
@@ -111,7 +114,8 @@ public class OrderServiceImpl implements OrderService {
         String message =
                 "Mã đơn hàng: " + order.getId() +
                 "\nTrạng thái: " + orderStatus.getName() +
-                "\nThanh toán: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
+                "\nLoại thanh toán: " + order.getPaymentType().getName() +
+                "\nTình trạng: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
                 "\nNgười đặt: " + order.getUser().getUsername() + " (" + order.getUser().getPhone() + " - " + order.getUser().getEmail() + ")" +
                 "\nNgày đặt: " + order.getCreatedDate().format(formatter);
         asyncService.sendTelegramMessage(notificationConfig.ORDER, message);
@@ -146,7 +150,8 @@ public class OrderServiceImpl implements OrderService {
                     "Mã đơn hàng: " + order.getId() +
                     "\nTrạng thái mới: " + orderStatus.getName() +
                     "\nTrạng thái cũ: " + oldStatus.getName() +
-                    "\nThanh toán: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
+                    "\nLoại thanh toán: " + order.getPaymentType().getName() +
+                    "\nTình trạng: " + (order.getPaymentStatus() ? "Đã thanh toán" : "Chưa thanh toán") +
                     "\nNgười đặt: " + order.getUser().getUsername() + " (" + order.getUser().getPhone() + " - " + order.getUser().getEmail() + ")" +
                     "\nNgày đặt: " + order.getCreatedDate().format(formatter) +
                     "\nNgười cập nhật: " + user.getUsername();
