@@ -84,6 +84,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         if (promotion.getId().equals(PromotionConstant.NONE.getId())) {
             newPrice = productOption.getPrice();
         } else if (promotion.getId().equals(PromotionConstant.GIAM_GIA.getId())
+                || promotion.getId().equals(PromotionConstant.MOI_RA_MAT.getId())
                 || promotion.getId().equals(PromotionConstant.GIA_RE_ONLINE.getId())) {
             if (value < 100) {
                 newPrice = (long) (productOption.getPrice() * ((100 - value) * 1.0 / 100));
