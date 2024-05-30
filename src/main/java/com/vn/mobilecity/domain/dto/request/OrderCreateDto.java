@@ -17,8 +17,15 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderCreateDto {
-    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Integer addressId;
+//    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+//    private Integer addressId;
+
+    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    private String customerName;
+    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    private String phone;
+    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    private String address;
     @Valid
     @Size(min = 1, message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private List<OrderProductRequestDto> orderProductRequestDtos;

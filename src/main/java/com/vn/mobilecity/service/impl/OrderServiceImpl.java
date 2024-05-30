@@ -69,11 +69,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto create(Integer userId, OrderCreateDto orderCreateDto) {
         User user = userService.getById(userId);
-        Address address = addressRepository.findById(orderCreateDto.getAddressId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Address.ERR_NOT_FOUND_ID, new String[]{orderCreateDto.getAddressId().toString()}));
-        if (!address.getCreatedBy().equals(userId)) {
-            throw new InvalidException(ErrorMessage.Order.ERR_INVALID_ADDRESS);
-        }
+//        Address address = addressRepository.findById(orderCreateDto.getAddressId())
+//                .orElseThrow(() -> new NotFoundException(ErrorMessage.Address.ERR_NOT_FOUND_ID, new String[]{orderCreateDto.getAddressId().toString()}));
+//        if (!address.getCreatedBy().equals(userId)) {
+//            throw new InvalidException(ErrorMessage.Order.ERR_INVALID_ADDRESS);
+//        }
         PaymentType paymentType = paymentTypeRepository.findById(orderCreateDto.getPaymentTypeId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.PaymentType.ERR_NOT_FOUND_ID, new String[]{orderCreateDto.getPaymentTypeId().toString()}));
 
@@ -91,9 +91,9 @@ public class OrderServiceImpl implements OrderService {
         netPriceTotal += orderCreateDto.getShippingFee();
         Order order = orderMapper.mapOrderCreateDtoToOrder(orderCreateDto);
         order.setUser(user);
-        order.setCustomerName(address.getCustomerName());
-        order.setPhone(address.getPhone());
-        order.setAddress(address.getAddress());
+        order.setCustomerName(orderCreateDto.getCustomerName());
+        order.setPhone(orderCreateDto.getPhone());
+        order.setAddress(orderCreateDto.getAddress());
         order.setOriginalPrice(originalPrice);
         order.setNetPriceTotal(netPriceTotal);
         OrderStatus orderStatus = orderStatusRepository.getById(OrderStatusConstant.WAITING.getId());
