@@ -76,6 +76,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             "   AND (po.storage_capacity >= ?7 AND po.storage_capacity <= ?8) " +
             "GROUP BY p.id " +
             "ORDER BY " +
-            "      p.name END DESC " , nativeQuery = true)
+            "      p.name DESC " , nativeQuery = true)
     List<Product> search4(String keyword, Integer categoryId, Long priceFrom, Long priceTo, Long ramFrom, Long ramTo, Long romFrom, Long romTo, Long sort);
 }
