@@ -62,6 +62,7 @@ public class MobileCityApplication {
                 paymentTypeRepository.save(new PaymentType(PaymentTypeConstant.OFFLINE.getId(), PaymentTypeConstant.OFFLINE.getName(), PaymentTypeConstant.OFFLINE.getDescription(), true, null));
                 paymentTypeRepository.save(new PaymentType(PaymentTypeConstant.MOMO.getId(), PaymentTypeConstant.MOMO.getName(), PaymentTypeConstant.MOMO.getDescription(), true, null));
                 paymentTypeRepository.save(new PaymentType(PaymentTypeConstant.VNPAY.getId(), PaymentTypeConstant.VNPAY.getName(), PaymentTypeConstant.VNPAY.getDescription(), true, null));
+                paymentTypeRepository.save(new PaymentType(PaymentTypeConstant.PAYOS.getId(), PaymentTypeConstant.PAYOS.getName(), PaymentTypeConstant.PAYOS.getDescription(), true, null));
                 paymentTypeRepository.save(new PaymentType(PaymentTypeConstant.TTKNH.getId(), PaymentTypeConstant.TTKNH.getName(), PaymentTypeConstant.TTKNH.getDescription(), true, null));
             }
 

@@ -100,7 +100,8 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(orderStatus);
         order.setPaymentType(paymentType);
         order.setPaymentStatus(orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.MOMO.getId())
-                || orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.VNPAY.getId()));
+                || orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.VNPAY.getId())
+                || orderCreateDto.getPaymentTypeId().equals(PaymentTypeConstant.PAYOS.getId()));
         orderRepository.save(order);
         order.setOrderCode(CodeUtil.generateCodeOrder(order.getId(), CommonConstant.ORDER_C0DE_LENGTH));
         orderRepository.save(order);
