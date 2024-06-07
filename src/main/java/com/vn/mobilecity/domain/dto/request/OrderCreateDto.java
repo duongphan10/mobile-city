@@ -29,7 +29,6 @@ public class OrderCreateDto {
     @Valid
     @Size(min = 1, message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private List<OrderProductRequestDto> orderProductRequestDtos;
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     private String note;
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Long shippingFee;

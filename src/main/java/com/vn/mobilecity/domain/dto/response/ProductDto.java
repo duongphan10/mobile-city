@@ -69,5 +69,9 @@ public class ProductDto extends UserDateAuditingDto {
     private Long promotionValue;
     private Boolean status;
 
+    private Integer numberReview;
+    private Double star;
+
+
     private List<ProductOptionDto> productOptionDtos;
 }

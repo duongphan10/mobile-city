@@ -123,6 +123,12 @@ public class UrlConstant {
         public static final String GET_ALL = PRE_FIX + "/all";
     }
 
+    public static class Payment {
+        private static final String PRE_FIX = "/payment";
+        public static final String CREATE = PRE_FIX+ "/momo/create-payment-link";
+        public static final String CHECK = PRE_FIX + "/momo/check-status-transaction";
+    }
+
     public static class Order {
         private static final String PRE_FIX = "/order";
         public static final String GET_BY_ID = PRE_FIX + "/{id}";

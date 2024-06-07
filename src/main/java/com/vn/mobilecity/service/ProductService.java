@@ -11,7 +11,7 @@ public interface ProductService {
 
     List<ProductDto> getAll(Integer categoryId, Integer promotionId);
 
-    List<ProductDto> search(String key, Long priceFrom, Long priceTo);
+    List<ProductDto> search(String key, Integer categoryId, Long priceFrom, Long priceTo, Long ramFrom, Long ramTo, Long romFrom, Long romTo, Long sort);
 
     ProductDto create(ProductRequestDto productRequestDto);
 

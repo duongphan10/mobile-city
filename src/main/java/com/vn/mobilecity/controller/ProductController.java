@@ -37,10 +37,16 @@ public class ProductController {
     @Tag(name = "product-controller")
     @Operation(summary = "API search product")
     @GetMapping(UrlConstant.Product.SEARCH)
-    public ResponseEntity<?> searchProduct(@RequestParam(name = "key", required = false, defaultValue = "") String key,
+    public ResponseEntity<?> searchProduct(@RequestParam(name = "search", required = false, defaultValue = "") String key,
+                                           @RequestParam(name = "categoryId", required = false, defaultValue = "-1") Integer categoryId,
                                            @RequestParam(name = "priceFrom", required = false) Long priceFrom,
-                                           @RequestParam(name = "priceTo", required = false) Long priceTo) {
-        return BaseResponse.success(productService.search(key, priceFrom, priceTo));
+                                           @RequestParam(name = "priceTo", required = false) Long priceTo,
+                                           @RequestParam(name = "ramFrom", required = false) Long ramFrom,
+                                           @RequestParam(name = "ramTo", required = false) Long ramTo,
+                                           @RequestParam(name = "romFrom", required = false) Long romFrom,
+                                           @RequestParam(name = "romTo", required = false) Long romTo,
+                                           @RequestParam(name = "sort", required = false) Long sort) {
+        return BaseResponse.success(productService.search(key, categoryId, priceFrom, priceTo, ramFrom, ramTo, romFrom, romTo, sort));
     }
 
     @Tag(name = "product-controller")
